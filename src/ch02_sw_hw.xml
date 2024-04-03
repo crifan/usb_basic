@@ -1,0 +1,448 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE chapter
+[
+
+<!ENTITY % crl_ent PUBLIC "crl.ent" 'http://www.crifan.com/files/res/docbook/entity/crl.ent'>
+%crl_ent;
+
+]>
+
+<chapter
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    xmlns:svg="http://www.w3.org/2000/svg"
+
+	xml:id="ch02_sw_hw">
+<title>USB相关的基础知识</title>
+<abstract></abstract>
+<para>在介绍USB协议的细节知识之前，有很多相关的软硬件的基础知识，需要了解一下。</para>
+<para></para>
+<para>TODO：</para>
+<para><link xl:href="http://www.silabs.com/Support%20Documents/Software/USB_Overview.pdf" />去学习USB的基础知识后整理过来。</para>
+<para></para>
+
+<sect1 xml:id="usb_related_hw"><title>USB相关的硬件</title>
+    <para>USB设备，从物理上的逻辑结构来说，包含了主机Host端和设备Device端。</para>
+    <para>其中，主机Host端，有对应的硬件的USB的主机控制器Host Controller，而设备端，连接的是对应的USB设备。</para>
+    
+    <sect2 xml:id="ohci_uhci_ehci_xhci"><title>USB控制器类型：OHCI，UHCI，EHCI，xHCI</title>
+        <para>由于历史原因，导致USB的主机控制器，出现了多种不同的类型，即OHCI和UHCI，EHCI，和xHCI。</para>
+        <para>不论是那种USB主机控制器，简称主控，都是符合对应的USB的规范的，都是实现了对应的USB规范中所规定的USB主控所要的那些事情的。只不过是不同的USB主控的类型，有着不同的特点。</para>
+        <para>下面对这些不同类型的USB主控制器，进行简要的解释。</para>
+        
+        <sect3 xml:id="ohci_vs_uhci"><title>OHCI和UHCI</title>
+            <para>OHCI，Open Host Controller Interface，创立者是Compaq，Microsoft和National Semiconductor。</para>
+            <para>UHCI，Universal Host Controller Interface，创立者是Intel。</para>
+            <para>两者之间的相同点是：</para>
+            <para>不论是OHCI还是UHCI都是对应于USB 1.1的标准的，都是完全符合USB协议标准的。</para>
+            <para>区别在于：</para>
+            <para>只是各自的实现方式有些略微不同而已。当然对应的具体的性能，也略有差别，具体的差异，，和实际的应用有关系。</para>
+            <para>但是本身OHCI和UHCI的区别在于：</para>
+            <para>虽然都是实现了USB1.1协议规范，但是在功能划分上，OHCI更多地把要做的事情，用硬件来实现，因此，实现OHCI的USB控制器的软件驱动的开发工作，相对要容易些，软件要做的事情，相对较少。</para>
+            <para>对应地，OHCI更多地应用在扩展卡，尤其是嵌入式领域中，常见的很多开发板中的USB的控制器，很多都是OHCI的。</para>
+            <para>而UHCI把更多的功能，留给了软件，相对来说，软件做的事情，即负担要重些。但是实现对应的UHCI的硬件的USB控制器，价格上，就相对便宜些。</para>
+            <para>对应地，UHCI更多地应用在PC机中的主板上的USB控制器。</para>
+            
+            <sect4 xml:id="uhci_more_soft"><title>为何Intel设计的UHCI把更多的任务都留给软件实现？</title>
+                <para>对于两者的区别和实际的应用，自己分析，不难发现，其是有着内在的逻辑关系的。</para>
+                <para>因此，作为UHCI的创立者Intel，创立了UHCI，把更多的USB需要做的事情，留给了软件，这样就可以实现出相对教便宜的USB的主控制器了，可以用于PC端的CPU所对应的主板上，便宜的USB主控，当然相对市场来说，更容易多卖出去一点，有利于市场推广。</para>
+                <para>PC主板卖出的多了， 自然对应的Intel的CPU，也会多卖点，Intel自然可以赚更多的钱了。</para>
+            </sect4>
+            
+            <sect4 xml:id="embedded_ohci"><title>为何嵌入式系统中的USB主控多用OHCI，而非UHCI？</title>
+                <para>而对应的Compaq，Microsoft和National Semiconductor所创立的OHCI，由于把更多的USB要做的事情，都用硬件实现了，这样对应的软件驱动所要做的事情，就少了，这样就有利于实现对应的OHCI的USB主控的驱动了，这点对于嵌入式系统来说，尤其重要，因为本身嵌入式系统就是资源有限，所以要尽量少的利用其他资源，比如CPU资源，去实现特点的功能，所以，倾向于采用对软件资源要求少的OHCI，而不是UHCI，否则用了UHCI的USB主控的话，需要实现对应的驱动，软件要做的事情太多，不利于在嵌入式系统这有限的资源环境下实现。</para>
+            </sect4>
+            
+            <sect4 xml:id="ohci_uhci_tech_detail"><title>OHCI和UHCI技术细节上的区别</title>
+                <para>关于OHCI和UCHI在技术细节方面，更加详细的区别主要有这些：</para>
+                <orderedlist>
+                    <listitem>单帧内的stage的个数
+                        <para>对于控制传输来说：</para>
+                        <itemizedlist>
+                            <listitem>OHCI：在单个帧内，可以调度多个stage；</listitem>
+                            <listitem>UHCI：在单个帧内，只调度一个stage。</listitem>
+                        </itemizedlist>
+                    </listitem>
+                    <listitem>单帧内的transaction的个数
+                        <para>对于最大数据包大小小于64字节的Bulk端点来说：</para>
+                        <itemizedlist>
+                            <listitem>OHCI：单个帧内，可能会有多个transaction。</listitem>
+                            <listitem>UHCI：单个帧内，不超过一个transaction；</listitem>
+                        </itemizedlist>
+                    </listitem>
+                    <listitem>轮询的频率
+                        <itemizedlist>
+                            <listitem>OHCI：，即使端点描述符中，已经指定了最大延迟是255ms，但是OHCI主控还是会，至少每32ms就去轮询一次中断端点</listitem>
+                            <listitem>UHCI：UHCI主控可以支持，但是不是必须要支持，更低频率地轮询</listitem>
+                        </itemizedlist>
+                    </listitem>
+                </orderedlist>
+            </sect4>
+        </sect3>
+        
+        <sect3 xml:id="ehci"><title>EHCI</title>
+            <para>EHCI，Enhanced Host Controller Interface。</para>
+            <para>简单说就是，EHCI定义了USB 2.0的主机控制器的规范，定义了USB 2.0的主控，需要包括哪些硬件实现，需要实现哪些功能，其也对应着对应的系统软件，所面对的是哪些接口。</para>
+            <para>EHCI对USB主控的定义，详细到了寄存器的级别了，即定义了你USB主控，都要实现哪些对应的功能和对应的寄存器有哪些，分别是何种功能等。然后对应的软件驱动人员，去写USB主控的驱动的时候，也就清楚有哪些可以利用的系统资源，如何去使用这些资源，读取，设置对应的寄存器，实现对应的功能了。</para>
+            <para>对应的EHCI规范，可以去Intel的官网找到：</para>
+            <para><ulink url="http://www.intel.com/technology/usb/ehcispec.htm">EHCI Specification</ulink></para>
+        </sect3>
+        
+        <sect3 xml:id="xhci"><title>xHCI</title>
+            <para>xHCI，Extensible Host Controller Interface</para>
+            <para>同EHCI是针对USB 2.0类似，xHCI是针对的USB 3.0规范。也是定义了USB 3.0主控需要如何实现，需要包含哪些功能，也是提供了寄存器级别的定义。</para>
+            <para>对应的xHCI规范，可以去Intel的官网找到：</para>
+            <para><ulink url="http://www.intel.com/technology/usb/xhcispec.htm">Extensible Host Controller Interface (xHCI) Specification for USB 3.0</ulink></para>
+        </sect3>
+        
+        <sect3 xml:id="four_hci_relations"><title>OHCI，UHCI，EHCI，xHCI的区别和联系</title>
+            <para>针对上述的解释，对USB的不同类型的主机控制器，简要概括如下：</para>
+            <table id="tbl.ohci_uhci_ehci_xhci" align="center" ><title>不同USB控制器类型OHCI，UHCI，EHCI，xHCI的区别和联系</title>
+                <tgroup cols="6">
+                    <colspec colnum="1" colname="col1" colwidth="1*" />
+                    <colspec colnum="2" colname="col2" colwidth="1*" />
+                    <colspec colnum="3" colname="col3" colwidth="1.5*" />
+                    <colspec colnum="4" colname="col4" colwidth="1*" />
+                    <colspec colnum="5" colname="col5" colwidth="2*" />
+                    <colspec colnum="6" colname="col6" colwidth="1*" />
+                    
+                    <thead>
+                        <row><entry morerows="1" valign="middle" >USB主机控制器类型</entry><entry morerows="1" valign="middle">共同点</entry><entry namest="col3" nameend="col6" >区别</entry></row>
+                        <row><entry colname="col3" >对应的USB的协议和支持的速率</entry><entry>创立者</entry><entry>功能划分</entry><entry>常用于</entry></row>
+                    </thead>
+                    
+                    <tbody>
+                        <row><entry>OHCI</entry><entry morerows="3" valign="middle" >都实现了对应的USB的规范中所要求的功能</entry><entry morerows="1" valign="middle" >USB 1.1=Low Speed和Full Speed</entry><entry>Compaq，Microsoft和National Semiconductor</entry><entry>硬件功能 &gt; 软件功能&rArr;硬件做的事情更多，所以实现对应的软件驱动的任务，就相对较简单</entry><entry>扩展卡，嵌入式开发板的USB主控</entry></row>
+                        <row><entry>UHCI</entry><entry colname="col4" >Intel</entry><entry>软件功能 &gt; 硬件功能&rArr;软件的任务重，可以使用较便宜的硬件的USB控制器</entry><entry>PC端的主板上的USB主控</entry></row>
+                        <row><entry>EHCI</entry><entry colname="col3" >USB 2.0=High Speed</entry><entry>Intel</entry><entry>定义了USB 2.0主控中所要实现何种功能，以及如何实现</entry><entry>各种USB 2.0主控</entry></row>
+                        <row><entry>xHCI</entry><entry colname="col3" >USB 3.0=Super Speed</entry><entry>Intel</entry><entry>定义了USB 3.0主控中所要实现何种功能，以及如何实现</entry><entry>各种USB 3.0主控</entry></row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </sect3>
+
+    </sect2>
+    
+    <sect2 xml:id="usb_pins"><title>USB接口的引脚定义</title>
+        <para>USB接口的物理上的对应的引脚和对应含义等，可用下表概括：</para>
+        <table id="tbl.usb_1x_20_pins" align="center" ><title>USB 1.x/2.0的引脚定义</title>
+            <tgroup cols="4">
+                <colspec colnum="1" colname="col1" colwidth="1*" />
+                <colspec colnum="2" colname="col2" colwidth="1*" />
+                <colspec colnum="3" colname="col3" colwidth="1*" />
+                <colspec colnum="4" colname="col4" colwidth="1*" />
+                
+                <thead>
+                    <row><entry>引脚</entry><entry>名称</entry><entry>电缆颜色</entry><entry>描述</entry></row>
+                </thead>
+                
+                <tbody>
+                    <row><entry>1</entry><entry>VBUS</entry><entry>Red</entry><entry>+5 V，电源</entry></row>
+                    <row><entry>2</entry><entry>D−</entry><entry>White</entry><entry>Data −，数据线</entry></row>
+                    <row><entry>3</entry><entry>D+</entry><entry>Green</entry><entry>Data +，数据线</entry></row>
+                    <row><entry>4</entry><entry>GND</entry><entry>Black</entry><entry>Ground，接地</entry></row>
+                </tbody>
+            </tgroup>
+        </table>
+        <para></para>
+        <table id="tbl.usb_30_pins" align="center" ><title>USB 3.0的引脚定义</title>
+            <tgroup cols="4">
+                <colspec colnum="1" colname="col1" colwidth="1*" />
+                <colspec colnum="2" colname="col2" colwidth="1*" />
+                <colspec colnum="3" colname="col3" colwidth="1*" />
+                <colspec colnum="4" colname="col4" colwidth="1*" />
+                
+                <thead>
+                    <row><entry>Pin</entry><entry>Color</entry><entry>Signal name('A' connector)</entry><entry>Signal name('B' connector)</entry></row>
+                </thead>
+                
+                <tbody>
+                    <row><entry>1</entry><entry>Red</entry><entry namest="col3" nameend="col4" >VBUS</entry></row>
+                    <row><entry>2</entry><entry>White</entry><entry namest="col3" nameend="col4" >D−</entry></row>
+                    <row><entry>3</entry><entry>Green</entry><entry namest="col3" nameend="col4" >D+</entry></row>
+                    <row><entry>4</entry><entry>Black</entry><entry namest="col3" nameend="col4" >GND</entry></row>
+                    <row><entry>5</entry><entry>Blue</entry><entry>StdA_SSRX−</entry><entry>StdA_SSTX−</entry></row>
+                    <row><entry>6</entry><entry>Yellow</entry><entry>StdA_SSRX+</entry><entry>StdA_SSTX+</entry></row>
+                    <row><entry>7</entry><entry>Shield</entry><entry namest="col3" nameend="col4" >GND_DRAIN</entry></row>
+                    <row><entry>8</entry><entry>Purple</entry><entry>StdA_SSTX−</entry><entry>StdA_SSRX−</entry></row>
+                    <row><entry>9</entry><entry>Orange</entry><entry>StdA_SSTX+</entry><entry>StdA_SSRX+</entry></row>
+                    <row><entry>Shell</entry><entry>Shell</entry><entry namest="col3" nameend="col4" >Shield</entry></row>
+                </tbody>
+            </tgroup>
+        </table>
+    </sect2>
+    
+    <sect2 xml:id="usb_connector"><title>USB的接口（connector）类型</title>
+        <para>由于USB的产生就是为了支持众多种应用的，而由于各种应用中，对于硬件接口的大小也有一些限制，比如有些小型设备或者移动式设备中，接口不能太大等，所以而设计出多种类型的接口，用于不同的应用。</para>
+        <para>在介绍插头和插座之前，先多解释一下，基本的叫法。</para>
+        <para>插头，plug，对应的也叫公口，即插别人的；</para>
+        <para>插座，receptacle，对应也叫做母口，即被插的；</para>
+        <para>对上述解释，想多了的，面壁去；没想多的，继续看技术介绍。</para>
+        <para>下面就来简单的介绍一下不同的USB接口类型，即各种不同的插头插座：</para>
+        <para>USB的接口类型，根据接口形状不同，主要可以分为三大类：</para>
+        <orderedlist>
+            <listitem>普通的硬件直接叫做Type</listitem>
+            <listitem>然后有小型版本的叫Mini迷你的</listitem>
+            <listitem>和更加小的，叫做Micro微小的</listitem>
+        </orderedlist>
+        <para>其中每一种大类中，又都可以分为两类</para>
+        <orderedlist>
+            <listitem>A类（Type A）</listitem>
+            <listitem>B类（Type B）</listitem>
+        </orderedlist>
+        <para>下面就用表格的形式，详细对比USB的各种接口，包括对应的插头和插座：</para>
+        <table id="tbl.usb_intf_type" align="center" ><title>USB接口分类</title>
+            <tgroup cols="7" >
+                <colspec colnum="1" colname="col1" colwidth="1*" />
+                <colspec colnum="2" colname="col2" colwidth="1*" />
+                <colspec colnum="3" colname="col3" colwidth="1*" />
+                <colspec colnum="4" colname="col4" colwidth="1*" />
+                <colspec colnum="5" colname="col5" colwidth="1*" />
+                <colspec colnum="6" colname="col6" colwidth="1*" />
+                <colspec colnum="7" colname="col7" colwidth="1*" />
+                
+                <thead>
+                    <row><entry>USB接口（插头）概览</entry><entry>大的分类</entry><entry>细分</entry><entry>特点</entry><entry>插头图片示例</entry><entry>对应的插座</entry><entry>常见用途</entry></row>
+                </thead>
+                
+                <tbody>
+                    <row>
+                        <entry morerows="5" valign="middle" >
+                            <informalfigure>
+                                <mediaobject>
+                                    <imageobject role="html">
+                                        <imagedata fileref="images/usb_all_type_ports.png" align="center" scalefit="0" width="100%" />
+                                    </imageobject>
+                                    <imageobject role="fo">
+                                        <imagedata fileref="images/usb_all_type_ports.png" align="center" scalefit="1" width="100%"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </informalfigure>
+                        </entry>
+                        <entry morerows="1" valign="middle" >Type</entry>
+                        <entry>Type A</entry>
+                        <entry>长方形</entry>
+                        <entry>
+                            <informalfigure>
+                                <mediaobject>
+                                    <imageobject role="html">
+                                        <imagedata fileref="images/type_a_plug.jpg" align="center" scalefit="0" width="100%" />
+                                    </imageobject>
+                                    <imageobject role="fo">
+                                        <imagedata fileref="images/type_a_plug.jpg" align="center" scalefit="1" width="100%"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </informalfigure>
+                        </entry>
+                        <entry>
+                            <informalfigure>
+                                <mediaobject>
+                                    <imageobject role="html">
+                                        <imagedata fileref="images/type_a_receptacle.png" align="center" scalefit="0" width="100%" />
+                                    </imageobject>
+                                    <imageobject role="fo">
+                                        <imagedata fileref="images/type_a_receptacle.png" align="center" scalefit="1" width="100%"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </informalfigure>
+                        </entry>
+                        <entry>普通PC端</entry>
+                    </row>
+
+                    <row>
+                        <entry colname="col3" >Type B</entry>
+                        <entry>内部正方近乎形，外部是梯形</entry>
+                        <entry>
+                            <informalfigure>
+                                <mediaobject>
+                                    <imageobject role="html">
+                                        <imagedata fileref="images/type_b_plug.jpg" align="center" scalefit="0" width="100%" />
+                                    </imageobject>
+                                    <imageobject role="fo">
+                                        <imagedata fileref="images/type_b_plug.jpg" align="center" scalefit="1" width="100%"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </informalfigure>
+                        </entry>
+                        <entry>
+                            <informalfigure>
+                                <mediaobject>
+                                    <imageobject role="html">
+                                        <imagedata fileref="images/type_b_receptacle.png" align="center" scalefit="0" width="100%" />
+                                    </imageobject>
+                                    <imageobject role="fo">
+                                        <imagedata fileref="images/type_b_receptacle.png" align="center" scalefit="1" width="100%"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </informalfigure>
+                        </entry>
+                        <entry>USB设备的接口</entry>
+                    </row>
+                    
+                    <row>
+                        <entry morerows="1" valign="middle" colname="col2" >Mini</entry>
+                        <entry>Mini A</entry>
+                        <entry>小型版的梯形</entry>
+                        <entry>
+                            <informalfigure>
+                                <mediaobject>
+                                    <imageobject role="html">
+                                        <imagedata fileref="images/mini_a_plug.png" align="center" scalefit="0" width="100%" />
+                                    </imageobject>
+                                    <imageobject role="fo">
+                                        <imagedata fileref="images/mini_a_plug.png" align="center" scalefit="1" width="100%"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </informalfigure>
+                        </entry>
+                        <entry morerows="1" valign="middle" >
+                            <informalfigure>
+                                <mediaobject>
+                                    <imageobject role="html">
+                                        <imagedata fileref="images/mini_ab_receptacle.png" align="center" scalefit="0" width="100%" />
+                                    </imageobject>
+                                    <imageobject role="fo">
+                                        <imagedata fileref="images/mini_ab_receptacle.png" align="center" scalefit="1" width="100%"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </informalfigure>
+                        </entry>
+                        <entry morerows="1" valign="middle" >数码相机，移动硬盘等移动设备</entry>
+                    </row>
+                    
+                    <row>
+                        <entry colname="col3" >Mini B</entry>
+                        <entry>小型版的长方形</entry>
+                        <entry>
+                            <informalfigure>
+                                <mediaobject>
+                                    <imageobject role="html">
+                                        <imagedata fileref="images/mini_b_plug.png" align="center" scalefit="0" width="100%" />
+                                    </imageobject>
+                                    <imageobject role="fo">
+                                        <imagedata fileref="images/mini_b_plug.png" align="center" scalefit="1" width="100%"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </informalfigure>
+                        </entry>
+                    </row>
+                    
+                    <row>
+                        <entry morerows="1" valign="middle" colname="col2" >Micro</entry>
+                        <entry>Micro A</entry>
+                        <entry morerows="1" valign="middle" >比Mini更扁</entry>
+                        <entry>
+                            <informalfigure>
+                                <mediaobject>
+                                    <imageobject role="html">
+                                        <imagedata fileref="images/micro_a_plug.jpg" align="center" scalefit="0" width="100%" />
+                                    </imageobject>
+                                    <imageobject role="fo">
+                                        <imagedata fileref="images/micro_a_plug.jpg" align="center" scalefit="1" width="100%"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </informalfigure>
+                        </entry>
+                        <entry morerows="1" valign="middle" >
+                            <informalfigure>
+                                <mediaobject>
+                                    <imageobject role="html">
+                                        <imagedata fileref="images/micro_ab_receptacle.png" align="center" scalefit="0" width="100%" />
+                                    </imageobject>
+                                    <imageobject role="fo">
+                                        <imagedata fileref="images/micro_ab_receptacle.png" align="center" scalefit="1" width="100%"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </informalfigure>
+                        </entry>
+                        <entry morerows="1" valign="middle" >手机等移动设备</entry>
+                    </row>
+                    
+                    <row>
+                        <entry colname="col3" >Micro B</entry>
+                        <entry colname="col5" >
+                            <informalfigure>
+                                <mediaobject>
+                                    <imageobject role="html">
+                                        <imagedata fileref="images/micro_b_plug.png" align="center" scalefit="0" width="100%" />
+                                    </imageobject>
+                                    <imageobject role="fo">
+                                        <imagedata fileref="images/micro_b_plug.png" align="center" scalefit="1" width="100%"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </informalfigure>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+        <tip>
+            <para>目前多数手机厂商已宣布统一使用Micro USB接口作为手机充电器标准接口。</para>
+        </tip>
+    </sect2>
+    
+</sect1>
+
+<sect1 xml:id="usb_related_sw"><title>USB相关的软件</title>
+    <para>如果某个USB设备正常工作，除了对应的硬件之外，还需要对应的软件支持。</para>
+    
+    <sect2 xml:id="usb_firmware"><title>USB设备端的固件（Firmware）</title>
+        <para>而对于USB设备端来说，内部是需要有对应的设备端的驱动，常常称其为固件Firmware，其实现了对应的设备端的USB所要做的事情，主要是相应一些标准的请求，完成对应的数据读取和写入等。</para>
+    </sect2>
+    
+    <sect2 xml:id="host_usb_drive"><title>USB主机（Host）端的USB驱动和软件</title>
+        <para>对应的，主机Host端，也需要对应的驱动，此部分驱动，不论是Linux下，还是Windows下，都已经实现了常见的驱动了，所以一般来说，很少需要驱动开发者再去写相关的驱动。</para>
+    </sect2>
+    
+    <sect2 xml:id="usb_analysis_tool"><title>其他一些USB测试和协议分析等软件</title>
+        <para>在设备驱动开发阶段或者USB出现问题，需要调试的时候，往往就需要一些调试工具了。</para>
+        <para>一般来说，都包含了对应的USB硬件测试工具，加上对应的软件工具，去捕获对应USB总线上的数据，即所谓的USB抓包，然后再去分析抓取出来的数据，是否是期望的，是否符合USB协议的规范定义。</para>
+        <para>我所见过的一些USB抓包工具有：</para>
+        <orderedlist>
+            <listitem>USB Explorer 260 + Ellisys USB Analysis Software
+                <para>Ellisys的USB Explorer 260硬件，加上对应的USB软件Ellisys USB Analysis Software，实现USB数据抓包和分析</para>
+                <para>Ellisys USB Explorer 260的外观是这样的：</para>
+                <figure id="fg.usb_tool_ellisys_usb_explorer_260"><title>USB协议分析工具：Ellisys的USB Explorer 260</title>
+                    <mediaobject>
+                        <imageobject role="html"> <imagedata fileref="images/usb_tool_ellisys_usb_explorer_260.jpg" align="left" scalefit="0" width="100%" /> </imageobject>
+                        <imageobject role="fo"  > <imagedata fileref="images/usb_tool_ellisys_usb_explorer_260.jpg" align="center" scalefit="1" width="60%"/> </imageobject>
+                    </mediaobject>
+                </figure>
+                <para></para>
+                <para></para>
+                <para>TODO：</para>
+                <para>Ellisys USB Explorer 260的对应功能特点，可以参考：</para>
+                <para><link xl:href="http://www.ellisys.com/products/usbex260/features.php#usbex260g" /></para>
+                <para></para>
+                <para></para>
+                <para>从：</para>
+                <para><link xl:href="http://www.ellisys.com/support/download.php" /></para>
+                <para>可以看到截图：</para>
+                <para>-&gt;</para>
+                <para><link xl:href="http://www.ellisys.com/products/usbex260/download.php" /></para>
+                <para>可以看到各种下载。</para>
+                <para></para>
+                <para></para>
+            </listitem>
+            <listitem>Catalyst Enterprises公司的硬件，加上对应的软件SBAE USB，实现USB数据捕获和分析</listitem>
+        </orderedlist>
+        <para>另外，当然也有一些USB开发相关的工具，比如：</para>
+        <orderedlist>
+            <listitem>usbview
+                <para>用于查看USB设备的详细信息</para>
+            </listitem>
+            <listitem>USB20CV
+                <para>用来做USB兼容性测试的工具，具体工具下载和详细解释可以去<ulink url="http://www.usb.org/developers/tools/">USB官网</ulink>找到。</para>
+            </listitem>
+            <listitem>bus hound
+                <para>好像是个纯软件的USB抓包工具，据说不支持USB枚举过程的抓包。具体没用过，只是听说过</para>
+            </listitem>
+        </orderedlist>
+    </sect2>
+</sect1>
+
+</chapter>

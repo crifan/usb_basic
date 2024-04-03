@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<glossary   xml:id="glossary"
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:xi="http://www.w3.org/2001/XInclude">
+<title>缩略词</title>
+
+<glossentry xml:id="EHCI"><glossterm>EHCI</glossterm>
+    <acronym>EHCI</acronym>
+    <glossdef>
+      <para>Enhanced Host Controller Interface</para>
+    </glossdef>
+</glossentry>
+
+<glossentry xml:id="NRZ"><glossterm>NRZ</glossterm>
+    <acronym>NRZ</acronym>
+    <glossdef>
+      <para>Non-Return-to-Zero</para>
+    </glossdef>
+</glossentry>
+
+<glossentry xml:id="NRZI"><glossterm>NRZI</glossterm>
+    <acronym>NRZI</acronym>
+    <glossdef>
+      <para>Non-Return-to-Zero Inverted</para>
+    </glossdef>
+</glossentry>
+
+<glossentry xml:id="OHCI"><glossterm>OHCI</glossterm>
+    <acronym>OHCI</acronym>
+    <glossdef>
+      <para>Open Host Controller Interface</para>
+    </glossdef>
+</glossentry>
+
+<glossentry xml:id="RZ"><glossterm>RZ</glossterm>
+    <acronym>RZ</acronym>
+    <glossdef>
+      <para>Return-to-Zero</para>
+    </glossdef>
+</glossentry>
+
+<glossentry xml:id="SYNC"><glossterm>SYNC</glossterm>
+    <acronym>SYNC</acronym>
+    <glossdef>
+      <para>Synchronize</para>
+    </glossdef>
+</glossentry>
+
+<glossentry xml:id="UHCI"><glossterm>UHCI</glossterm>
+    <acronym>UHCI</acronym>
+    <glossdef>
+      <para>Universal Host Controller Interface</para>
+    </glossdef>
+</glossentry>
+
+<glossentry xml:id="USB"><glossterm>USB</glossterm>
+    <acronym>USB</acronym>
+    <glossdef>
+      <para>Universal Serial Bus</para>
+      <para>通用串行总线</para>
+    </glossdef>
+</glossentry>
+
+<glossentry xml:id="xHCI"><glossterm>xHCI</glossterm>
+    <acronym>xHCI</acronym>
+    <glossdef>
+      <para>eXtensible Host Controller Interface</para>
+    </glossdef>
+</glossentry>
+
+</glossary>

@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE chapter
+[
+
+<!ENTITY % crl_ent PUBLIC "crl.ent" 'http://www.crifan.com/files/res/docbook/entity/crl.ent'>
+%crl_ent;
+
+]>
+
+<chapter
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    xmlns:svg="http://www.w3.org/2000/svg"
+
+	xml:id="ch01_from_to">
+<title>USB的来龙去脉</title>
+<abstract></abstract>
+
+<sect1 xml:id="what_is_usb"><title>USB是什么</title>
+    <para>USB是Universal Serial Bus的缩写，中文译为通用串行总线。</para>
+    <para>所以，从字面意思上，善于思考的人，就问有疑问：</para>
+    <para>那么与此USB相比，其他还有哪些非串行的总线，以及和此通用的串行总线来说，其他还有哪些相对“不通用”的串行总线呢？</para>
+    <para>对此，借用《USB Complete》里面所总结的，关于USB和其他接口的区别，来解释一下：</para>
+    <figure id="fg.usb_vs_others"><title>USB与其他总线的异同</title>
+        <mediaobject>
+            <imageobject role="html">
+                <imagedata fileref="images/usb_vs_others.png" align="left" scalefit="0" width="100%" />
+            </imageobject>
+            <imageobject role="fo">
+                <imagedata fileref="images/usb_vs_others.png" align="center" scalefit="1" width="100%"/>
+            </imageobject>
+        </mediaobject>
+    </figure>
+    <para>从上述表格中，表面上看，好像也没看出USB相对其他接口，有多么特别明显的优点，而只是看到在某些参数上，比其他某些接口参数更高，而在别的某些参数上，比其他接口低。</para>
+    <para>关于细节的区别，不是此讨论的重点，此处，我们至少可以看出，除了USB接口外，目前已存在的接口，还是很多的，而且各种接口实际上从硬件上也是形状各异，互相也都有自己的应用领域，而且无法兼容。基于此背景，才有下面的解释，以说明，为何会出现这么个USB接口。</para>
+    <para>此处，简单的说，USB就是一种接口，一种总线。</para>
+</sect1>
+
+<sect1 xml:id="why_need_usb"><title>为何要有USB</title>
+    <para>上面已经提到了，在USB出现之前，其实计算机领域中，已经存在众多的接口，而且不同的应用领域，已有一些相对来说是广泛使用的各种接口了。</para>
+    <para>但是，对于计算机等使用的普通用户来说，由于接口太多，而容易被搞得晕头转向。再加上各个接口从硬件形状和软件配置也都不一样，导致不兼容，为了不同的应用，而要配置多种不同的硬件接口，设置对于有些硬件接口来说，还需要手动去配置一些更细节的参数。</para>
+    <para>关于USB出现之前，计算机领域中的接口太多太繁杂，可以用下面这张，关于PC机箱背后的接口的图片来说明：</para>
+    <figure id="fg.ports_at_pc_backblane"><title>PC机箱后面的众多接口</title>
+        <mediaobject>
+            <imageobject role="html">
+                <imagedata fileref="images/ports_at_pc_backblane.png" align="left" scalefit="0" width="100%" />
+            </imageobject>
+            <imageobject role="fo">
+                <imagedata fileref="images/ports_at_pc_backblane.png" align="center" scalefit="1" width="100%"/>
+            </imageobject>
+        </mediaobject>
+    </figure>
+    <para>所以，总的来说，在USB出现之前，各种接口太多，而且都不太容易使用，互相之间的兼容性也较差，因此，才出现了USB。</para>
+    <para>而万能的USB接口出现的话，整个PC机箱背后的接口，就不那么繁杂，显得清静多了：</para>
+    <figure id="fg.ports_at_pc_backblane_with_usb"><title>有了USB接口之后的PC机箱背后的接口</title>
+        <mediaobject>
+            <imageobject role="html">
+                <imagedata fileref="images/ports_at_pc_backblane_with_usb.png" align="left" scalefit="0" width="100%" />
+            </imageobject>
+            <imageobject role="fo">
+                <imagedata fileref="images/ports_at_pc_backblane_with_usb.png" align="center" scalefit="1" width="100%"/>
+            </imageobject>
+        </mediaobject>
+    </figure>
+    <para>USB出现的最初的目的，根据USB规范中的解释，是为了：</para>
+    <orderedlist>
+        <listitem>将PC和电话能连起来
+            <para>由于大家都认识到，下一代的应用，肯定是实现计算机设备和通讯设备的完美融合。而且，为了实现移动领域内的人机数据的交互，也需要方便且不贵的连接方案。</para>
+            <para>但是，计算机领域和通讯领域却是各自为政的发展，没有考虑互联性。由此，USB的出现，就是为了解决这一类互联问题的</para>
+        </listitem>
+        <listitem>方便用户使用
+            <para>以前的一些设备，多数不支持即插即用，而且很多设备还需要懂行的用户去手动配置，然后才可以正常工作</para>
+            <para>而USB的出现，使得用户不用关心设备的细节，不需要去另外再配置什么参数，直接插上就可以用了，而且还支持即插即用，很是方便</para>
+        </listitem>
+        <listitem>接口扩展性要好
+            <para>之前的众多接口，导致不同的应用，需要使用不同的接口，很是繁琐。</para>
+            <para>USB的出现，支持众多的应用，都使用统一的USB的接口，方便了用户，不需要再搞懂各种接口的用途和差异。</para>
+        </listitem>
+    </orderedlist>
+    <para>总的来说，USB的出现，是希望通过此单个的USB接口，同时支持多种不同的应用，而且用户用起来也很方便，直接插上就能用了，也方便不同的设备的之间的互联。</para>
+    <para>说白了，就相当于在之前众多的接口之上，设计出一个USB这么个万能的接口，以后各种外设，都可以用这一种接口即可。</para>
+    <para>这估计也是USB的名称中的Universal通用的这一个词的来历吧。</para>
+</sect1>
+
+</chapter>

@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE book
+[
+
+<!ENTITY cur_book_name      "usb_basic" >
+<!ENTITY publish_date       "2015-05-26" >
+<!ENTITY release_version    "0.9.2" >
+
+<!ENTITY copyrith_year "2015" >
+<!ENTITY entity_common_multi_format     SYSTEM  "../../entity_common_multi_format.xml">
+<!ENTITY entity_common_publish_info     SYSTEM  "../../entity_common_publish_info.xml">
+]>
+
+<book version="5.0"
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    
+    xml:lang="zh_CN"
+    >
+
+<info>
+    <title>USB基础知识概论</title>
+    <subtitle></subtitle>
+    <keywordset>
+        <keyword>USB</keyword>
+        <keyword>概论</keyword>
+        <keyword>OHCI</keyword>
+        <keyword>UHCI</keyword>
+        <keyword>EHCI</keyword>
+        <keyword>xHCI</keyword>
+        <keyword>枚举</keyword>
+    </keywordset>
+
+    <abstract>
+        <para>本文主要介绍了USB协议的基础知识，包括USB协议的来龙去脉，OHCI/UHCI/EHCI/xHCI之间的区别和联系，USB的firmware，以及USB 2.0协议的概览，USB的枚举的详细过程，OHCI的一些特点</para>
+        &entity_common_multi_format;
+    </abstract>
+
+    <revhistory>
+        <revision>
+            <revnumber>0.5</revnumber>
+            <date>2011-10-06</date>
+            <revremark>
+                <orderedlist>
+                    <listitem>USB基础知识概论</listitem>
+                </orderedlist>
+            </revremark>
+            <authorinitials>crl</authorinitials>
+        </revision>
+        <revision>
+            <revnumber>&release_version;</revnumber>
+            <date>&publish_date;</date>
+            <revremark>
+                <orderedlist>
+                    <listitem>通过Docbook发布</listitem>
+                    <listitem>添加了USB协议细节部分的内容</listitem>
+                    <listitem>添加了USB OHCI学习笔记</listitem>
+                    <listitem>更新了所有的xml:id</listitem>
+                </orderedlist>
+            </revremark>
+            <authorinitials>crl</authorinitials>
+        </revision>
+    </revhistory>
+
+    &entity_common_publish_info;
+</info>
+
+<xi:include href="glossary.xml"/>
+<xi:include href="preface.xml"/>
+<xi:include href="ch01_from_to.xml"/>
+<xi:include href="ch02_sw_hw.xml"/>
+<xi:include href="ch03_protocol_overview.xml"/>
+<xi:include href="ch04_protocol_detail.xml"/>
+<xi:include href="reference.xml"/>
+
+</book>

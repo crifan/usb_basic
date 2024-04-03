@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding="utf-8"?>
+<bibliography xml:id="reference"
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:xl="http://www.w3.org/1999/xlink"
+        xmlns:xi="http://www.w3.org/2001/XInclude"
+        xmlns:ns5="http://www.w3.org/1998/Math/MathML"
+        xmlns:ns4="http://www.w3.org/1999/xhtml"
+        xmlns:ns3="http://www.w3.org/2000/svg"
+        xmlns:ns="http://docbook.org/ns/docbook">
+
+<bibliomixed xml:id="ref.usb_20_spec">
+  <bibliosource><link xl:href="http://www.usb.org/developers/docs/usb_20.zip">官方的USB 2.0规范</link></bibliosource>
+  <author>usb org</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.usb_in_a_nutshell">
+  <bibliosource><link xl:href="http://www.beyondlogic.org/usbnutshell/usb1.shtml">USB in a Nutshell - Making sense of the USB standard</link></bibliosource>
+  <author>Craig.Peacock</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.usb_complete">
+  <bibliosource><link xl:href="http://www.lvr.com/usbc.htm">USB Complete</link></bibliosource>
+  <author>Jan Axelson</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.usb_those_things">
+  <bibliosource><link xl:href="http://bbs.chinaunix.net/thread-1977195-1-1.html">【很好的学习Linux驱动的教材】Linux那些事儿系列[全][pdf]</link></bibliosource>
+  <author>fudan_abc</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.wiki_usb_zh">
+  <bibliosource><link xl:href="http://zh.wikipedia.org/zh/USB">USB接口</link></bibliosource>
+  <author>wiki</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.wiki_usb">
+  <bibliosource><link xl:href="http://en.wikipedia.org/wiki/USB">USB</link></bibliosource>
+  <author>wiki</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.usb_plug_rectancle">
+  <bibliosource><link xl:href="http://www.metsky.com/archives/474.html">USB 2.0 A型、B型、Mini和Micro接口定义及封装</link></bibliosource>
+  <author>metsky</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.wireless_usb_doc">
+  <bibliosource><link xl:href="http://www.usb.org/developers/wusb/docs/">Wireless USB Documents</link></bibliosource>
+  <author>usb org</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.usb_nrzi">
+  <bibliosource><link xl:href="http://galeki.is-programmer.com/posts/10054.html">USB的NRZI编码</link></bibliosource>
+  <author>galeki</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.usb_30">
+  <bibliosource><link xl:href="http://en.wikipedia.org/wiki/USB_3.0">USB 3.0</link></bibliosource>
+  <author>wiki</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.usbnutshell_ch6">
+  <bibliosource><link xl:href="http://www.beyondlogic.org/usbnutshell/usb6.shtml">USB in a NutShell - The Setup Packet</link></bibliosource>
+  <author>Craig.Peacock</author>
+</bibliomixed>
+
+<bibliomixed id="ref.usb_win_emulation">
+  <bibliosource><link xl:href="http://www.8052.com/users/knowledgebase/usb-in-a-nutshell.pdf">Windows enumeration steps</link></bibliosource>
+  <author>Craig.Peacock</author>
+</bibliomixed>
+
+</bibliography>

@@ -1,0 +1,590 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE chapter
+[
+
+<!ENTITY % crl_ent PUBLIC "crl.ent" 'http://www.crifan.com/files/res/docbook/entity/crl.ent'>
+%crl_ent;
+
+]>
+
+<chapter
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    xmlns:svg="http://www.w3.org/2000/svg"
+
+	xml:id="ch04_protocol_detail">
+<title>USB协议细节</title>
+<abstract></abstract>
+
+<sect1 xml:id="usb_class"><title>USB Class</title>
+    <para>关于USB的Class，对于学习USB协议的人，估计早就听到过此名词了。</para>
+    <para>而对于USB的Class的分类，此处先列出那个最基本的分类表：</para>
+    <table xml:id="tbl.usb_class"><title>USB Class表</title>
+        <tgroup cols="3">
+            <colspec colnum="1" colname="col1" colwidth="1*" />
+            <colspec colnum="2" colname="col2" colwidth="1*" />
+            <colspec colnum="3" colname="col3" colwidth="4*" />
+            
+            <thead>
+                <row><entry>Base Class</entry><entry>Descriptor Usage</entry><entry>Description</entry></row>
+            </thead>
+            
+            <tbody>
+                <row><entry>00h</entry><entry>Device </entry><entry>Use class information in the Interface Descriptors</entry></row>
+                <row><entry>01h</entry><entry>Interface</entry><entry>Audio</entry></row>
+                <row><entry>02h</entry><entry>Both</entry><entry>Communications and CDC Control</entry></row>
+                <row><entry>03h</entry><entry>Interface</entry><entry>HID (Human Interface Device)</entry></row>
+                <row><entry>05h</entry><entry>Interface</entry><entry>Physical</entry></row>
+                <row><entry>06h</entry><entry>Interface</entry><entry>Image</entry></row>
+                <row><entry>07h</entry><entry>Interface</entry><entry>Printer</entry></row>
+                <row><entry>08h</entry><entry>Interface</entry><entry>Mass Storage</entry></row>
+                <row><entry>09h</entry><entry>Device</entry><entry>Hub</entry></row>
+                <row><entry>0Ah</entry><entry>Interface</entry><entry>CDC-Data</entry></row>
+                <row><entry>0Bh</entry><entry>Interface</entry><entry>Smart Card</entry></row>
+                <row><entry>0Dh</entry><entry>Interface</entry><entry>Content Security</entry></row>
+                <row><entry>0Eh</entry><entry>Interface</entry><entry>Video</entry></row>
+                <row><entry>0Fh</entry><entry>Interface</entry><entry>Personal Healthcare</entry></row>
+                <row><entry>DCh</entry><entry>Both</entry><entry>Diagnostic Device</entry></row>
+                <row><entry>E0h</entry><entry>Interface</entry><entry>Wireless Controller</entry></row>
+                <row><entry>EFh</entry><entry>Both</entry><entry>Miscellaneous</entry></row>
+                <row><entry>FEh</entry><entry>Interface</entry><entry>Application Specific</entry></row>
+                <row><entry>FFh</entry><entry>Both</entry><entry>Vendor Specific</entry></row>
+            </tbody>
+        </tgroup>
+    </table>
+
+    <sect2 xml:id="why_many_class"><title>为何要搞这么多USB的Class</title>
+        <para>其实，看到<xref linkend="tbl.usb_class" />中的一堆的Class分类，一般人，都会晕的。</para>
+        <para>所以，就要简单解释一下，为何会有这么多USB的Class分类。</para>
+        <para>首先我们要知道，USB协议设计的目的，就是为了<xref linkend="why_need_usb" />中所提到的，用单一的USB接口，取代之前种类繁多的各种其他接口。</para>
+        <para>而为了取代其他各种接口，那意味着就要实现，或者是支持，之前别的接口，所对应的各种功能。</para>
+        <para>因此，USB协议设计的时候，就是要把鼠标，键盘，大容量存储，图像等，这些之前是通过其他接口所实现的，各种的功能，都囊括进来。并且在协议中有对应的规范定义，支持这些功能。</para>
+        <para>因此，才有了如此多的各种USB的Clas，即分类，根据功能而分出的各种类别。不同的Class分类，用于实现对应的功能，适用于相应的设备。</para>
+        <para>比如我们常见的鼠标和键盘，都属于Class 3的HID，U盘属于Class 8的Mass Storage等。</para>
+        <para>而关于这些分类，每种分类都对应着哪些具体的应用和功能，感兴趣的可以去参考<link xl:href="http://www.xat.nl/en/riscos/sw/usb/">USB classes</link>中的<link xl:href="http://www.xat.nl/en/riscos/sw/usb/class.htm">Overview of the various USB classes</link>，该页面，相对形象地列出了各种Class所对应的应用。</para>
+    </sect2>
+    
+    <para>再回到上述的<xref linkend="tbl.usb_class" />，其中的“Descriptor Usage”中的Interface，Device等，对应的是来自<xref linkend="tbl.usb_des_type" /></para>
+    <table xml:id="tbl.usb_des_type"><title>USB Descriptor Type</title>
+        <tgroup cols="2">
+            <colspec colnum="1" colname="col1" colwidth="1*" />
+            <colspec colnum="2" colname="col2" colwidth="1*" />
+            
+            <thead>
+                <row><entry>Descriptor Type</entry><entry>Value</entry></row>
+            </thead>
+            
+            <tbody>
+                <row><entry>DEVICE</entry><entry>1</entry></row>
+                <row><entry>CONFIGURATION</entry><entry>2</entry></row>
+                <row><entry>STRING</entry><entry>3</entry></row>
+                <row><entry>INTERFACE</entry><entry>4</entry></row>
+                <row><entry>ENDPOINT</entry><entry>5</entry></row>
+                <row><entry>DEVICE_QUALIFIER</entry><entry>6</entry></row>
+                <row><entry>OTHER_SPEED_CONFIGURATION</entry><entry>7</entry></row>
+                <row><entry>INTERFACE_POWER</entry><entry>8</entry></row>
+            </tbody>
+        </tgroup>
+    </table>
+    
+    <para>而关于什么是Device，什么是Interface等内容，暂时先简述他们之间的关系：</para>
+    <para><emphasis>Device &rArr; Configuration &rArr; Interface &rArr; Endpoint</emphasis></para>
+    <para>更新详细内容，待以后有空再深入解释。</para>
+</sect1>
+
+<sect1 xml:id="usb_arch"><title>USB的框架</title>
+    <para>对于USB的框架，暂时先贴出一些相关图片，细节的解释，有空再写。</para>
+    <figure id="fg.usb_impl_area"><title>USB Implementation Areas</title>
+        <mediaobject>
+            <imageobject role="html"><imagedata fileref="images/usb_impl_area.gif" align="left"   scalefit="0" width="100%" /></imageobject>
+            <imageobject role="fo">  <imagedata fileref="images/usb_impl_area.gif" align="center" scalefit="1" width="100%"/></imageobject>
+        </mediaobject>
+    </figure>
+    <para></para>
+    <figure id="fg.usb_phy_bus_topo"><title>USB Physical Bus Topology</title>
+        <mediaobject>
+            <imageobject role="html"><imagedata fileref="images/usb_phy_bus_topo.gif" align="left"   scalefit="0" width="100%" /></imageobject>
+            <imageobject role="fo">  <imagedata fileref="images/usb_phy_bus_topo.gif" align="center" scalefit="1" width="100%"/></imageobject>
+        </mediaobject>
+    </figure>
+    <para></para>
+    <figure id="fg.usb_logi_bus_topo"><title>USB Logical Bus Topology</title>
+        <mediaobject>
+            <imageobject role="html"><imagedata fileref="images/usb_logi_bus_topo.gif" align="left"   scalefit="0" width="100%" /></imageobject>
+            <imageobject role="fo">  <imagedata fileref="images/usb_logi_bus_topo.gif" align="center" scalefit="1" width="100%"/></imageobject>
+        </mediaobject>
+    </figure>
+    <para></para>
+    <figure id="fg.usb_comm_flow"><title>USB Communication Flow</title>
+        <mediaobject>
+            <imageobject role="html"><imagedata fileref="images/usb_comm_flow.gif" align="left"   scalefit="0" width="100%" /></imageobject>
+            <imageobject role="fo">  <imagedata fileref="images/usb_comm_flow.gif" align="center" scalefit="1" width="100%"/></imageobject>
+        </mediaobject>
+    </figure>
+    <para></para>
+    <figure id="fg.usb_linux_layer"><title>USB Layers in Linux</title>
+        <mediaobject>
+            <imageobject role="html"><imagedata fileref="images/usb_linux_layer.gif" align="left"   scalefit="0" width="100%" /></imageobject>
+            <imageobject role="fo">  <imagedata fileref="images/usb_linux_layer.gif" align="center" scalefit="1" width="100%"/></imageobject>
+        </mediaobject>
+    </figure>
+</sect1>
+
+<sect1 xml:id="transfer_transaction"><title>USB Transfer and Transaction</title>
+    <figure id="fg.usb_transfer_transaction"><title>USB Transfer and Transaction</title>
+        <mediaobject>
+            <imageobject role="html"><imagedata fileref="images/usb_transfer_transaction.png" align="left"   scalefit="0" width="100%" /></imageobject>
+            <imageobject role="fo">  <imagedata fileref="images/usb_transfer_transaction.png" align="center" scalefit="1" width="100%"/></imageobject>
+        </mediaobject>
+    </figure>
+</sect1>
+
+<sect1 xml:id="emulation"><title>USB枚举（Emulation）</title>
+    <para>关于USB的枚举，是学习USB协议所面临的第一个最基础也是最重要的内容。</para>
+    
+    <sect2 xml:id="what_is_emulation"><title>什么是USB枚举</title>
+        <para>USB枚举，USB Emulation，从字面意思看，就是去列举USB，而列举啥呢，其实就是USB的初始化。</para>
+        <para>简单来说，USB的枚举，对应的就是USB的Host和Device之间的对话，即Host根据Device所报告上来的参数，得知USB的device是啥类型的，具有啥功能，然后初始化相关参数。</para>
+        <para>接下来，就USB Device就可以正常工作了。</para>
+        <para>所以，可以简单的理解为，USB枚举，就是USB设备的初始化（init）。</para>
+    </sect2>
+    
+    <sect2 xml:id="emulation_procedure"><title>USB枚举的过程</title>
+        <para>此处摘录一个，<xref linkend="ref.usb_win_emulation" />中的关于windows下USB枚举的过程的总结：</para>
+        <blockquote>
+            <orderedlist>
+                <listitem>The host or hub detects the connection of a new device via the device's pull up resistors on the data pair. The host waits for at least 100ms allowing for the plug to be inserted fully and for power to stabilise on the device.</listitem>
+                <listitem>Host issues a reset placing the device is the default state. The device may now respond to the default address zero.</listitem>
+                <listitem>The MS Windows host asks for the first 64 bytes of the Device Descriptor.</listitem>
+                <listitem>After receiving the first 8 bytes of the Device Descriptor, it immediately issues another bus reset.</listitem>
+                <listitem>The host now issues a Set Address command, placing the device in the addressed state.</listitem>
+                <listitem>The host asks for the entire 18 bytes of the Device Descriptor.</listitem>
+                <listitem>It then asks for 9 bytes of the Configuration Descriptor to determine the overall size.</listitem>
+                <listitem>The host asks for 255 bytes of the Configuration Descriptor.</listitem>
+                <listitem>Host asks for any String Descriptors if they were specified.</listitem>
+            </orderedlist>
+            <para>At the end of Step 9, Windows will ask for a driver for your device. It is then common to see it request all the descriptors again before it issues a Set Configuration request. </para>
+        </blockquote>
+        <para>而相对来说，更加详细一点的解释，可以去看<link xl:href="http://www.lvr.com/usbcenum.htm">Enumeration: How the Host Learns about Devices</link></para>
+        <para>其实，单独看此文字描述，虽然解释的很是详细了，但是还是很难彻底搞懂。</para>
+        <para>所以，后面会专门通过<xref linkend="usb_emulation_example" />来彻底的解析，到底USB的枚举的过程如何，以及发送的数据的详细所对应的含义。</para>
+    </sect2>
+
+    <sect2 xml:id="usb_emulation_example"><title>举例详解USB的枚举过程</title>
+        <para>既然说到举例，那么就要有相应的数据。</para>
+        <para>此处的USB枚举所涉及到的数据，是之前某次开发过程中，通过<xref linkend="usb_analysis_tool" />中所介绍的SBAE USB所抓取出来的数据，并且软件可以详细分析每个字节所对应的含义。</para>
+        <sect3 xml:id="emulaton_example"><title>USB枚举示例数据</title>
+            <para>抓包工具抓到了共0x42=66字节的数据，其中每个字节对应的十六进制表示是两个数字，所以一共是66x2=132个数字：</para>
+            <screen>0902420002010480E10904000002FF000000092110010001223F0007050103400001070581034000010904010001030000000921100100012221000705820340000A</screen>
+            <para>可被拆分为对应的8组：</para>
+            <itemizedlist>
+                <listitem>0902420002010480E1</listitem>
+                <listitem>0904000002FF000000</listitem>
+                <listitem>092110010001223F00</listitem>
+                <listitem>07050103400001</listitem>
+                <listitem>07058103400001</listitem>
+                <listitem>090401000103000000</listitem>
+                <listitem>092110010001222100</listitem>
+                <listitem>0705820340000A</listitem>
+            </itemizedlist>
+            <para>而关于为何可以被分成这8组，此处先解释一下：</para>
+            <tip><title>如何（解析）看懂USB枚举的数据</title>
+                <para>对于Configuration，Interface，Endpoint，Class等部分，其数据格式的定义中，首字节，都是表示长度，即，接下来多少个字节，属于当前这部分。</para>
+                <para>所以，对于上述数据来说，从开始的“09”，我们就知道了，接下来的8个字节的数据“02420002010480E1”，都是属于当前Configuration部分的。</para>
+                <para>以此接着往下判断，则分别可以判断出对应的每一部分的数据，都是哪些。</para>
+                <para>而对于这些数据分组的依次顺序，则是USB协议中定义的。详细定义，请参考USB协议。</para>
+            </tip>
+        </sect3>
+        
+        <sect3 xml:id="emulation_each_meaning"><title>详细分析USB枚举数据的每个字段的具体含义</title>
+            <para>接下来，就是分析，每一部分的数据，到底对应的是何种含义。</para>
+            <para>此处，再把上述数据贴出来，并进行分析：</para>
+            <programlistingco>
+                <programlisting>
+0902420002010480E1<co id="co.configuration" linkends="co.note.configuration" />
+0904000002FF000000<co id="co.interface_0904000002FF000000" linkends="co.note.interface_0904000002FF000000" />
+092110010001223F00<co id="co.class" linkends="co.note.class" />
+07050103400001<co id="co.endpoint_07050103400001" linkends="co.note.endpoint_07050103400001" />
+07058103400001<co id="co.endpoint_07058103400001" linkends="co.note.endpoint_07058103400001" />
+090401000103000000<co id="co.interface_090401000103000000" linkends="co.note.interface_090401000103000000" />
+092110010001222100<co id="co.class_hid" linkends="co.note.class_hid" />
+0705820340000A<co id="co.endpoint_0705820340000A" linkends="co.note.endpoint_0705820340000A" />
+                </programlisting>
+                <calloutlist>
+                    <callout id="co.note.configuration" arearefs="co.configuration" >
+                        <para>此部分内容对应着的是：<emphasis>Configuration</emphasis></para>
+                        <para>其定义为：</para>
+                        <table xml:id="tbl.usb_cfg_desc"><title>USB Configuration Descriptors</title>
+                            <tgroup cols="5">
+                                <colspec colnum="1" colname="col1" colwidth="0.8*" />
+                                <colspec colnum="2" colname="col2" colwidth="2.5*" />
+                                <colspec colnum="3" colname="col3" colwidth="0.6*" />
+                                <colspec colnum="4" colname="col4" colwidth="1*" />
+                                <colspec colnum="5" colname="col5" colwidth="4*" />
+                                
+                                <thead>
+                                    <row><entry>Offset</entry><entry>Field</entry><entry>Size</entry><entry>Value</entry><entry>Description</entry></row>
+                                </thead>
+                                
+                                <tbody>
+                                    <row><entry>0</entry><entry>bLength</entry><entry>1</entry><entry>Number</entry><entry>Size of Descriptor in Bytes</entry></row>
+                                    <row><entry>1</entry><entry>bDescriptorType</entry><entry>1</entry><entry>Constant</entry><entry>Configuration Descriptor (0x02)</entry></row>
+                                    <row><entry>2</entry><entry>wTotalLength</entry><entry>2</entry><entry>Number</entry><entry>Total length in bytes of data returned</entry></row>
+                                    <row><entry>4</entry><entry>bNumInterfaces</entry><entry>1</entry><entry>Number</entry><entry>Number of Interfaces</entry></row>
+                                    <row><entry>5</entry><entry>bConfigurationValue</entry><entry>1</entry><entry>Number</entry><entry>Value to use as an argument to select this configuration</entry></row>
+                                    <row><entry>6</entry><entry>iConfiguration</entry><entry>1</entry><entry>Index</entry><entry>Index of String Descriptor describing this configuration</entry></row>
+                                    <row><entry>7</entry><entry>bmAttributes</entry><entry>1</entry><entry>Bitmap</entry><entry>
+                                            <informaltable>
+                                                <tgroup cols="2">
+                                                    <colspec colnum="1" colname="col1" colwidth="1*" />
+                                                    <colspec colnum="2" colname="col2" colwidth="4*" />
+                                                    <tbody>
+                                                        <row><entry>D7</entry><entry>Reserved, set to 1. (USB 1.0 Bus Powered)</entry></row>
+                                                        <row><entry>D6</entry><entry>Self Powered</entry></row>
+                                                        <row><entry>D5</entry><entry>Remote Wakeup</entry></row>
+                                                        <row><entry>D4..0</entry><entry>Reserved, set to 0.</entry></row>
+                                                    </tbody>
+                                                </tgroup>
+                                            </informaltable></entry></row>
+                                    <row><entry>8</entry><entry>bMaxPower</entry><entry>1</entry><entry>mA</entry><entry>Maximum Power Consumption in 2mA units</entry></row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                        <para>其每个字节对应的含义为：</para>
+                        <figure id="fg.cfg_desc_0902420002010480E1"><title>Configuration Descriptor: 0902420002010480E1</title>
+                            <mediaobject>
+                                <imageobject role="html"><imagedata fileref="images/cfg_desc_0902420002010480E1.png" align="left"   scalefit="0" width="100%" /></imageobject>
+                                <imageobject role="fo">  <imagedata fileref="images/cfg_desc_0902420002010480E1.png" align="center" scalefit="1" width="100%"/></imageobject>
+                            </mediaobject>
+                        </figure>
+                    </callout>
+                    
+                    <callout id="co.note.interface_0904000002FF000000" arearefs="co.interface_0904000002FF000000" >
+                        <para>此部分内容对应着的是：<emphasis>Interface</emphasis></para>
+                        <para>其定义为：</para>
+                        <table xml:id="tbl.usb_intf_desc"><title>USB Interface Descriptors</title>
+                            <tgroup cols="5">
+                                <colspec colnum="1" colname="col1" colwidth="1*" />
+                                <colspec colnum="2" colname="col2" colwidth="2*" />
+                                <colspec colnum="3" colname="col3" colwidth="1*" />
+                                <colspec colnum="4" colname="col4" colwidth="1*" />
+                                <colspec colnum="5" colname="col5" colwidth="4*" />
+                                
+                                <thead>
+                                    <row><entry>Offset</entry><entry>Field</entry><entry>Size</entry><entry>Value</entry><entry>Description</entry></row>
+                                </thead>
+                                
+                                <tbody>
+                                    <row><entry>0</entry><entry>bLength</entry><entry>1</entry><entry>Number</entry><entry>Size of Descriptor in Bytes (9 Bytes)</entry></row>
+                                    <row><entry>1</entry><entry>bDescriptorType</entry><entry>1</entry><entry>Constant</entry><entry>Interface Descriptor (0x04)</entry></row>
+                                    <row><entry>2</entry><entry>bInterfaceNumber</entry><entry>1</entry><entry>Number</entry><entry>Number of Interface</entry></row>
+                                    <row><entry>3</entry><entry>bAlternateSetting</entry><entry>1</entry><entry>Number</entry><entry>Value used to select alternative setting</entry></row>
+                                    <row><entry>4</entry><entry>bNumEndpoints</entry><entry>1</entry><entry>Number</entry><entry>Number of Endpoints used for this interface</entry></row>
+                                    <row><entry>5</entry><entry>bInterfaceClass</entry><entry>1</entry><entry>Class</entry><entry>Class Code (Assigned by USB Org)</entry></row>
+                                    <row><entry>6</entry><entry>bInterfaceSubClass</entry><entry>1</entry><entry>SubClass</entry><entry>Subclass Code (Assigned by USB Org)</entry></row>
+                                    <row><entry>7</entry><entry>bInterfaceProtocol</entry><entry>1</entry><entry>Protocol</entry><entry>Protocol Code (Assigned by USB Org)</entry></row>
+                                    <row><entry>8</entry><entry>iInterface</entry><entry>1</entry><entry>Index</entry><entry>Index of String Descriptor Describing this interface</entry></row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                        <para>其每个字节对应的含义为：</para>
+                        <figure id="fg.intf_desc_0904000002FF000000"><title>Interface Descriptor: 0904000002FF000000</title>
+                            <mediaobject>
+                                <imageobject role="html"><imagedata fileref="images/intf_desc_0904000002FF000000.png" align="left"   scalefit="0" width="100%" /></imageobject>
+                                <imageobject role="fo">  <imagedata fileref="images/intf_desc_0904000002FF000000.png" align="center" scalefit="1" width="100%"/></imageobject>
+                            </mediaobject>
+                        </figure>
+                    </callout>
+
+                    <callout id="co.note.class" arearefs="co.class" >
+                        <para>此部分内容对应着的是：<emphasis>Class</emphasis></para>
+                        <para>由于其前面的<xref linkend="co.interface_0904000002FF000000" />中bInterfaceClass=0xFF，对应着<xref linkend="tbl.usb_class" />中的vendor-specific，所以此部分的值的含义，是针对特定厂家的特定的含义，因此此处就不具体解释了。</para>
+                    </callout>
+
+                    <callout id="co.note.endpoint_07050103400001" arearefs="co.endpoint_07050103400001" >
+                        <para>此部分内容对应着的是：<emphasis>Endpoint</emphasis></para>
+                        <para>其定义为：</para>
+                        <table xml:id="tbl.usb_endpt_desc"><title>USB Endpoint Descriptors</title>
+                            <tgroup cols="5">
+                                <colspec colnum="1" colname="col1" colwidth="0.6*" />
+                                <colspec colnum="2" colname="col2" colwidth="2*" />
+                                <colspec colnum="3" colname="col3" colwidth="0.5*" />
+                                <colspec colnum="4" colname="col4" colwidth="1*" />
+                                <colspec colnum="5" colname="col5" colwidth="4*" />
+                                
+                                <thead>
+                                    <row><entry>Offset</entry><entry>Field</entry><entry>Size</entry><entry>Value</entry><entry>Description</entry></row>
+                                </thead>
+                                
+                                <tbody>
+                                    <row><entry>0</entry><entry>bLength</entry><entry>1</entry><entry>Number</entry><entry>Size of Descriptor in Bytes (7 bytes)</entry></row>
+                                    <row><entry>1</entry><entry>bDescriptorType</entry><entry>1</entry><entry>Constant</entry><entry>Endpoint Descriptor (0x05)</entry></row>
+                                    <row><entry>2</entry><entry>bEndpointAddress</entry><entry>1</entry><entry>Endpoint</entry><entry>Endpoint Address
+                                            <informaltable><tgroup cols="2">
+                                                    <colspec colnum="1" colname="col1" colwidth="1*" />
+                                                    <colspec colnum="2" colname="col2" colwidth="3*" />
+                                                    <tbody>
+                                                        <row><entry>Bits 0..3b</entry><entry>Endpoint Number</entry></row>
+                                                        <row><entry>Bits 4..6b</entry><entry>Reserved. Set to Zero</entry></row>
+                                                        <row><entry>Bits 7</entry><entry>Remote Wakeup</entry></row>
+                                                        <row><entry>D4..D0</entry><entry>Direction
+                                                            <informaltable><tgroup cols="2">
+                                                                    <colspec colnum="1" colname="col1" colwidth="1*" />
+                                                                    <colspec colnum="2" colname="col2" colwidth="3*" />
+                                                                    <tbody>
+                                                                        <row><entry>0</entry><entry>Out</entry></row>
+                                                                        <row><entry>1</entry><entry>In (Ignored for Control Endpoints)</entry></row>
+                                                                    </tbody>
+                                                                </tgroup>
+                                                            </informaltable></entry>
+                                                        </row>
+                                                    </tbody>
+                                                </tgroup>
+                                            </informaltable></entry></row>
+                                    <row><entry>3</entry><entry>bmAttributes</entry><entry>1</entry><entry>Bitmap</entry>
+                                        <entry>
+                                            <informaltable><tgroup cols="2">
+                                                    <colspec colnum="1" colname="col1" colwidth="1*" />
+                                                    <colspec colnum="2" colname="col2" colwidth="4*" />
+                                                    <tbody>
+                                                        <row><entry>Bits 0..1</entry><entry>Transfer Type
+                                                            <informaltable><tgroup cols="2">
+                                                                    <colspec colnum="1" colname="col1" colwidth="1*" />
+                                                                    <colspec colnum="2" colname="col2" colwidth="2*" />
+                                                                    <tbody>
+                                                                        <row><entry>00</entry><entry>Control</entry></row>
+                                                                        <row><entry>01</entry><entry>Isochronous</entry></row>
+                                                                        <row><entry>10</entry><entry>Bulk</entry></row>
+                                                                        <row><entry>11</entry><entry>Interrupt</entry></row>
+                                                                    </tbody>
+                                                                </tgroup>
+                                                            </informaltable></entry>
+                                                        </row>
+                                                        <row><entry>Bits 2..7</entry><entry>are reserved.<para>If Isochronous endpoint:</para>
+                                                            <informaltable><tgroup cols="2">
+                                                                    <colspec colnum="1" colname="col1" colwidth="1*" />
+                                                                    <colspec colnum="2" colname="col2" colwidth="3*" />
+                                                                    <tbody>
+                                                                        <row><entry>Bits 3..2</entry><entry>Synchronisation Type (Iso Mode)
+                                                                            <informaltable><tgroup cols="2">
+                                                                                    <colspec colnum="1" colname="col1" colwidth="1*" />
+                                                                                    <colspec colnum="2" colname="col2" colwidth="3*" />
+                                                                                    <tbody>
+                                                                                        <row><entry>00</entry><entry>No Synchonisation</entry></row>
+                                                                                        <row><entry>01</entry><entry>Asynchronous</entry></row>
+                                                                                        <row><entry>10</entry><entry>Adaptive</entry></row>
+                                                                                        <row><entry>11</entry><entry>Synchronous</entry></row>
+                                                                                    </tbody>
+                                                                                </tgroup>
+                                                                            </informaltable></entry>
+                                                                        </row>
+                                                                        <row><entry>Bits 5..4</entry><entry>Usage Type (Iso Mode)
+                                                                            <informaltable><tgroup cols="2">
+                                                                                    <colspec colnum="1" colname="col1" colwidth="1*" />
+                                                                                    <colspec colnum="2" colname="col2" colwidth="3*" />
+                                                                                    <tbody>
+                                                                                        <row><entry>00</entry><entry>Data Endpoint</entry></row>
+                                                                                        <row><entry>01</entry><entry>Feedback Endpoint</entry></row>
+                                                                                        <row><entry>10</entry><entry>Explicit Feedback Data Endpoint</entry></row>
+                                                                                        <row><entry>11</entry><entry>Reserved</entry></row>
+                                                                                    </tbody>
+                                                                                </tgroup>
+                                                                            </informaltable></entry>
+                                                                        </row>
+                                                                    </tbody>
+                                                                </tgroup>
+                                                            </informaltable></entry>
+                                                        </row>
+                                                    </tbody>
+                                                </tgroup>
+                                            </informaltable>
+                                        </entry>
+                                    </row>
+                                    <row><entry>4</entry><entry>wMaxPacketSize</entry><entry>2</entry><entry>Number</entry><entry>Maximum Packet Size this endpoint is capable of sending or receiving</entry></row>
+                                    <row><entry>6</entry><entry>bInterval</entry><entry>1</entry><entry>Number</entry><entry>Interval for polling endpoint data transfers. Value in frame counts. Ignored for Bulk &amp; Control Endpoints. Isochronous must equal 1 and field may range from 1 to 255 for interrupt endpoints.</entry></row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                        <para>其每个字节对应的含义为：</para>
+                        <figure id="fg.ep_desc_07050103400001"><title>Endpoint (Interrupt Out) Descriptor: 07050103400001</title>
+                            <mediaobject>
+                                <imageobject role="html"><imagedata fileref="images/ep_desc_07050103400001.png" align="left"   scalefit="0" width="100%" /></imageobject>
+                                <imageobject role="fo">  <imagedata fileref="images/ep_desc_07050103400001.png" align="center" scalefit="1" width="100%"/></imageobject>
+                            </mediaobject>
+                        </figure>
+                    </callout>
+
+                    <callout id="co.note.endpoint_07058103400001" arearefs="co.endpoint_07058103400001" >
+                        <para>此部分内容和<xref linkend="co.endpoint_07050103400001" />类似，也是对应着：<emphasis>Endpoint</emphasis></para>
+                        <para>对应定义为：<xref linkend="tbl.usb_endpt_desc" /></para>
+                        <para>其每个字节对应的含义为：</para>
+                        <figure id="fg.ep_desc_07058103400001"><title>Endpoint (Interrupt In) Descriptor: 07058103400001</title>
+                            <mediaobject>
+                                <imageobject role="html"><imagedata fileref="images/ep_desc_07058103400001.png" align="left"   scalefit="0" width="100%" /></imageobject>
+                                <imageobject role="fo">  <imagedata fileref="images/ep_desc_07058103400001.png" align="center" scalefit="1" width="100%"/></imageobject>
+                            </mediaobject>
+                        </figure>
+                    </callout>
+
+                    <callout id="co.note.interface_090401000103000000" arearefs="co.interface_090401000103000000" >
+                        <para>此部分内容对应着的是：<emphasis>Interface</emphasis></para>
+                        <para>其定义为参考：<xref linkend="tbl.usb_intf_desc" /></para>
+                        <para>其每个字节对应的含义为：</para>
+                        <figure id="fg.intf_desc_090401000103000000"><title>Interface Descriptor: 090401000103000000</title>
+                            <mediaobject>
+                                <imageobject role="html"><imagedata fileref="images/intf_desc_090401000103000000.png" align="left"   scalefit="0" width="100%" /></imageobject>
+                                <imageobject role="fo">  <imagedata fileref="images/intf_desc_090401000103000000.png" align="center" scalefit="1" width="100%"/></imageobject>
+                            </mediaobject>
+                        </figure>
+                    </callout>
+                    
+                    <callout id="co.note.class_hid" arearefs="co.class_hid" >
+                        <para>由于<xref linkend="co.interface_090401000103000000" />中bInterfaceClass=0x03，对应着<xref linkend="tbl.usb_class" />中的HID，所以，此部分内容的解析，依赖于对应的HID中的定义。</para>
+                        <para>可在官方的1.1版本的HID协议：<link xl:href="http://www.usb.org/developers/devclass_docs/HID1_11.pdf">HID1_11.pdf</link>中的“6.2.1 HID Descriptor”部分找到对应的定义：</para>
+                        <table xml:id="tbl.usb_hid"><title>USB HID Descriptors</title>
+                            <tgroup cols="3">
+                                <colspec colnum="1" colname="col1" colwidth="2*" />
+                                <colspec colnum="2" colname="col2" colwidth="1.5*" />
+                                <colspec colnum="3" colname="col3" colwidth="5*" />
+                                
+                                <thead>
+                                    <row><entry>Part</entry><entry>Offset/Size(Bytes)</entry><entry>Description</entry></row>
+                                </thead>
+                                
+                                <tbody>
+                                    <row><entry>bLength</entry><entry>0/1</entry><entry>Numeric expression that is the total size of the HID descriptor.</entry></row>
+                                    <row><entry>bDescriptorType</entry><entry>1/1</entry><entry>Constant name specifying type of HID descriptor.</entry></row>
+                                    <row><entry>bcdHID</entry><entry>2/2</entry><entry>Numeric expression identifying the HID Class Specification release.</entry></row>
+                                    <row><entry>bCountryCode</entry><entry>4/1</entry><entry>Numeric expression identifying country code of the localized hardware.</entry></row>
+                                    <row><entry>bNumDescriptors</entry><entry>5/1</entry><entry>Numeric expression specifying the number of class descriptors (always at least one i.e. Report descriptor.)</entry></row>
+                                    <row><entry>bDescriptorType</entry><entry>6/1</entry><entry>Constant name identifying type of class descriptor. See Section 7.1.2: Set_Descriptor Request for a table of class descriptor constants.</entry></row>
+                                    <row><entry>wDescriptorLength</entry><entry>7/2</entry><entry>Numeric expression that is the total size of the Report descriptor.</entry></row>
+                                    <row><entry>[bDescriptorType]</entry><entry>9/1</entry><entry>Constant name specifying type of optional descriptor.</entry></row>
+                                    <row><entry>[wDescriptorLength]</entry><entry>10/2</entry><entry>Numeric expression that is the total size of the optional descriptor.</entry></row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                        <para>其每个字节对应的含义为：</para>
+                        <table xml:id="tbl.usb_hid_desc_090401000103000000"><title>USB HID Descriptor: 090401000103000000</title>
+                            <tgroup cols="5">
+                                <colspec colnum="1" colname="col1" colwidth="1*" />
+                                <colspec colnum="2" colname="col2" colwidth="2.5*" />
+                                <colspec colnum="3" colname="col3" colwidth="1*" />
+                                <colspec colnum="4" colname="col4" colwidth="1*" />
+                                <colspec colnum="5" colname="col5" colwidth="4*" />
+                                
+                                <thead>
+                                    <row><entry>Offset</entry><entry>Field</entry><entry>Size</entry><entry>Value</entry><entry>Description</entry></row>
+                                </thead>
+                                
+                                <tbody>
+                                    <row><entry>0</entry><entry>bLength</entry><entry>1</entry><entry><emphasis>09</emphasis></entry><entry>the total size of the HID descriptor =9 bytes</entry></row>
+                                    <row><entry>1</entry><entry>bDescriptorType</entry><entry>1</entry><entry><emphasis>21</emphasis></entry><entry>descriptor constant, HID = 0x21</entry></row>
+                                    <row><entry>2</entry><entry>bcdHID</entry><entry>2</entry><entry><emphasis>1001</emphasis></entry><entry>HID Class Specification release 0x0110= 1.10</entry></row>
+                                    <row><entry>4</entry><entry>bCountryCode</entry><entry>1</entry><entry><emphasis>00</emphasis></entry><entry>No country code of the localized hardware</entry></row>
+                                    <row><entry>5</entry><entry>bNumDescriptors</entry><entry>1</entry><entry><emphasis>01</emphasis></entry><entry>the number of class descriptors = 1</entry></row>
+                                    <row><entry>6</entry><entry>bDescriptorType</entry><entry>1</entry><entry><emphasis>22</emphasis></entry><entry>Class descriptor constant, 0x22 = Report descriptor</entry></row>
+                                    <row><entry>7</entry><entry>wDescriptorLength</entry><entry>2</entry><entry><emphasis>2100</emphasis></entry><entry>the total size of the Report descriptor  =0x0021=33 bytes</entry></row>
+                                    <row><entry>9</entry><entry>[bDescriptorType]</entry><entry>2</entry><entry></entry><entry></entry></row>
+                                    <row><entry>10</entry><entry>[wDescriptorLength]</entry><entry></entry><entry></entry><entry></entry></row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </callout>
+
+                    <callout id="co.note.endpoint_0705820340000A" arearefs="co.endpoint_0705820340000A" >
+                        <para>此部分内容和<xref linkend="co.endpoint_07058103400001" />类似，也是对应着：<emphasis>Endpoint</emphasis></para>
+                        <para>对应定义为：<xref linkend="tbl.usb_endpt_desc" /></para>
+                        <para>其每个字节对应的含义为：</para>
+                        <figure id="fg.ep_desc_0705820340000A"><title>Endpoint (Interrupt In 2) Descriptor: 0705820340000A</title>
+                            <mediaobject>
+                                <imageobject role="html"><imagedata fileref="images/ep_desc_0705820340000A.png" align="left"   scalefit="0" width="100%" /></imageobject>
+                                <imageobject role="fo">  <imagedata fileref="images/ep_desc_0705820340000A.png" align="center" scalefit="1" width="100%"/></imageobject>
+                            </mediaobject>
+                        </figure>
+                    </callout>
+                </calloutlist>
+            </programlistingco>
+        </sect3>
+
+    </sect2>
+</sect1>
+
+<sect1 xml:id="usb_ohci_learn"><title>USB OHCI学习笔记</title>
+    <para>此处记录之前学习USB OHCI过程中所记录的一些心得：</para>
+    <orderedlist>
+        <listitem>
+            <para>OHCI主要应用于嵌入式等系统，因为其特点就是用硬件实现了尽可能多的功能，而使得USB软件驱动部分，相对要容易很多，相对更加统一，使用统一的接口。</para>
+            <para>所以，OHCI spec里面写道，其目的就是为了推广USB，让大家更加接受USB。</para>
+        </listitem>
+        <listitem>
+            <para>端点描述符（ED），一个放在内存里的数据结构，描述了主机控制器（HC）和设备之间如何交互。</para>
+            <para>ED里面包含了一个 TD（Transfer Endpoint，传输描述符）指针</para>
+        </listitem>
+        <listitem>
+            <para>常见的缩写：</para>
+            <itemizedlist>
+                <listitem>HC（Host Controller）</listitem>
+                <listitem>HCCA（Host Controller Communication Area）</listitem>
+                <listitem>HCD（Host Controller Driver）</listitem>
+                <listitem>HCDI（Host Controller Driver Interface）</listitem>
+                <listitem>HCI（Host Controller Interface）</listitem>
+            </itemizedlist>
+        </listitem>
+        <listitem>
+            <para>一些关系：</para>
+            <figure xml:id="fg.usb_host_sw_hw"><title>USB主机中软件和硬件之间的关系</title>
+                <mediaobject>
+                    <imageobject role="html"><imagedata fileref="images/usb_host_sw_hw.gif" align="left"   scalefit="0" width="100%" /></imageobject>
+                    <imageobject role="fo">  <imagedata fileref="images/usb_host_sw_hw.gif" align="center" scalefit="1" width="100%"/></imageobject>
+                </mediaobject>
+            </figure>
+        </listitem>
+        <listitem>
+            <para>Phase，意思可以理解为阶段。</para>
+            <para>一个完整的数据传输(Transaction)分三个阶段。</para>
+            <para>对应的，USB传输完成后的结果表示中，关于错误，就有个Phase Error，意思应该就是，其中某个阶段出错了。</para>
+        </listitem>
+        <listitem>
+            <para>队列：传输描述符(TD，Transfer Descriptor)的列表</para>
+        </listitem>
+        <listitem>
+            <para>SOF，Start Of Frame。</para>
+            <para>SOF的作用是让端点能够识别帧的开始，和同步内部端点的始终，使其和Host一致。</para>
+        </listitem>
+        <listitem>
+            <para>OHCI里面，数据传输分两类：周期性和非周期性。</para>
+            <para>周期性的包含，中断传输和等时传输，因为他们是以固定的间隔调度执行。</para>
+            <para>非周期性传输即是控制传输和大块(Bulk)传输。</para>
+        </listitem>
+        <listitem>
+            <para>HC和HCD之间通信的通道有2个：一堆寄存器和[可选的]HCCA：</para>
+            <figure xml:id="fg.usb_comm_chanel"><title>USB Communication Channel</title>
+                <mediaobject>
+                    <imageobject role="html"><imagedata fileref="images/usb_comm_chanel.png" align="left"   scalefit="0" width="100%" /></imageobject>
+                    <imageobject role="fo">  <imagedata fileref="images/usb_comm_chanel.png" align="center" scalefit="1" width="100%"/></imageobject>
+                </mediaobject>
+            </figure>
+        </listitem>
+        <listitem>
+            <para>HCCA里有个头指针，指向一个ED链表。其中每一个ED里面，包含一个TD链表，有一个或多个要被处理的TD。处理原则是，谁先到，先处理谁。</para>
+            <figure xml:id="fg.usb_typical_list_strct"><title>USB Typical List Structure</title>
+                <mediaobject>
+                    <imageobject role="html"><imagedata fileref="images/usb_typical_list_strct.png" align="left"   scalefit="0" width="100%" /></imageobject>
+                    <imageobject role="fo">  <imagedata fileref="images/usb_typical_list_strct.png" align="center" scalefit="1" width="100%"/></imageobject>
+                </mediaobject>
+            </figure>
+        </listitem>
+        <listitem>
+            <para>大块传输和控制传输的ED链表的头指针，是放在HC的操作寄存器里面的；</para>
+            <para>中断传输的ED链表的头指针是放在HCCA里面的。</para>
+            <para>没有相应的等时传输的ED链表的头指针。第一个等时传输的ED链表，直接指向最后一个中断传输的ED。</para>
+        </listitem>
+    </orderedlist>
+</sect1>
+
+</chapter>

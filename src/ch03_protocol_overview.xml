@@ -1,0 +1,207 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE chapter
+[
+
+<!ENTITY % crl_ent PUBLIC "crl.ent" 'http://www.crifan.com/files/res/docbook/entity/crl.ent'>
+%crl_ent;
+
+]>
+<chapter
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    xmlns:svg="http://www.w3.org/2000/svg"
+
+	xml:id="ch03_protocol_overview">
+<title>USB协议概览</title>
+<abstract></abstract>
+
+<sect1 xml:id="usb20_overview"><title>USB 2.0协议内容概览</title>
+    <para>USB协议，由于涉及内容太多，所以在此一个文档中解释清楚，是不现实的。</para>
+    <para>此处能做的和要做的，就是对于USB协议简明地介绍一下关于USB本身协议部分的内容。</para>
+    <para>当前最新的USB协议，已经发展到USB 3.0了。但是主流的USB设备和技术，还是以USB 2.0居多。所以此文，主要是以USB 2.0为基础来解释USB协议的基础知识，当然，会在相关内容涉及到USB 3.0的时候，也把USB 3.0的相关内容添加进来。</para>
+    <para>关于USB 2.0和USB 3.0等USB的协议规范，可以去官网下载：</para>
+    <para><link xl:href="http://www.usb.org/developers/docs/">http://www.usb.org/developers/docs/</link></para>
+    <para>其实，说实话，不论是谁，如果开始看USB协议的时候，发现单独对于USB 2.0规范本身这一个文档来说，竟然都有650页，而如果再加上，新的USB 3.0规范的482页，和其他一些辅助的USB相关的规范定义等文档，即使你是英语为母语的人，如果要看完这么多页的协议规范，估计也会吐的，更别说我们中国人了。</para>
+    <para>所以，此处，就来简单以USB 2.0规范为例，分析一下，具体其都主要包含哪些内容，然后你会发现，其实和USB协议本身相关的内容，相对则不会那么多，大概只有97页左右的内容，是我们所要关心的。</para>
+    <para>下面就来分析看看，USB 2.0的规范中，具体都包含了哪些内容：</para>
+    <table id="tbl.usb_20_content"><title>USB 2.0协议的内容组成</title>
+        <tgroup cols="4">
+            <colspec colnum="1" colname="col1" colwidth="1*" />
+            <colspec colnum="2" colname="col2" colwidth="2*" />
+            <colspec colnum="3" colname="col3" colwidth="8*" />
+            <colspec colnum="4" colname="col4" colwidth="1*" />
+            
+            <thead>
+                <row><entry>章节</entry><entry>名称</entry><entry>内容描述</entry><entry>页数</entry></row>
+            </thead>
+            
+            <tbody>
+                <row><entry>1</entry><entry>介绍</entry><entry>介绍了为何要有USB以及USB协议内容的涵盖范围。此章节最重要的信息就是，引用了USB Device Class规范。不需要看。</entry><entry>2</entry></row>
+                <row><entry>2</entry><entry>术语和缩写</entry><entry>名词解释，一般的协议都会有这一章节的。无需看。</entry><entry>8</entry></row>
+                <row><entry>3</entry><entry>背景</entry><entry>说明了USB的来由，以及目的是为了是USB的用户，注意不是为了是USB的开发者，更加容易使用。介绍了Low，Full，High Speed三种不同的速度以及对应的应用领域。所以也不需要看。</entry><entry>4</entry></row>
+                <row><entry>4</entry><entry>系统架构综述</entry><entry>可以从这章开始看。此章介绍了USB系统的基本架构，包括拓扑关系，数据速度，数据流类型，基本的电气规范。</entry><entry>10</entry></row>
+                <row><entry>5</entry><entry>USB数据流模型</entry><entry>此章开始介绍USB中数据是如何流向的。其先介绍了端点和管道，然后对控制，中断，等时，批量四种传输类型进行了详细阐述。其中，重要的一点是，要搞懂每种传输类型，当然，这对于初学者来说可能会有那么一点难。</entry><entry>60</entry></row>
+                <row><entry>6</entry><entry>机械的</entry><entry>此章详细介绍了USB的两种标准的连接头，即接口的类型，其中需要了解的一点是，A类接口旨在用于数据向下流的（downstream），而B类接口旨在用于数据向上流的（upstream）。因此，你应该知道，不应该也不可能去将一个USB线，连到两个都是upstream的端口上。而所有的full或high speed的USB线，都是可拔插的，而低速的USB线，应该是焊死的。如果你不是USB接口的制造商，那么就没必要细看这章，而只需要大概浏览一下其中关于USB的接口类型的相关内容即可。</entry><entry>33</entry></row>
+                <row><entry>7</entry><entry>电子的</entry><entry>此章详解了USB总线上的电子信号，包括线阻，上下沿的时间，驱动者和接受者的规范定义，以及比特位编码，比特位填充等。此章中需要知道的，更重要的一点是，关于使用电阻在数据线上的偏压，去实现USB设备的速度类型检测，以及设备是总线供电还是自供电。除非你是在晶元级别上设计USB数据收发模块的相关人士，否则都可以直接跳过此章节。而正常的USB设备的数据手册中，都会有相关的解释，说明关于USB总线阻抗需要匹配电阻的阻值是多少。</entry><entry>75</entry></row>
+                <row><entry>8</entry><entry>协议层</entry><entry>此章，从字节的级别，解释了USB数据包的细节，包括了同步，PID，地址，端点，CRC域。多数的开发人员都还没注意到这部分的底层的协议层，因为USB的设备中的硬件IC，会帮你做这些事情的。然而，多学习和了解一些关于报告状态和握手协议方面的知识，还是有必要的。。</entry><entry>45</entry></row>
+                <row><entry>9</entry><entry>USB设备框架工作<superscript><xref linkend="ch09" /></superscript></entry><entry>此章，是整个USB协议中，用到的最多的一章。此章详细阐述了USB总线枚举的过程，以及一些USB Request的详细语法和含义，比如set address，get descriptor等，这些相关内容在一起，就构成了最常用的USB的协议层，也是通常USB编程人员和开发者所看到的这一层。此章节，必须详细阅读和学习。</entry><entry>36</entry></row>
+                <row><entry>10</entry><entry>USB主机的硬件和软件</entry><entry>此章介绍了和USB Host相关的知识。包括了数据帧frame和微帧microframe的产生，主机控制器的需求，软件机制和USB的驱动模型等。如果你不是去设计USB Host的话，那么就直接跳过此章即可。</entry><entry>23</entry></row>
+                <row><entry>11</entry><entry>Hub规范</entry><entry>此章定义了USB Hub相关的规范，包括了Hub的配置，分离传输，Hub类的标准描述符等。同理，如果你不是去设计USB Hub，那么也可以忽略此章。</entry><entry>143</entry></row>
+            </tbody>
+        </tgroup>
+    </table>
+    <tip>
+        <orderedlist>
+            <listitem id="ch09" xreflabel="[1]">
+                <para>关于第九章=chapter 9=ch9，多说明一下，由于其特殊性，特殊在于大部分和USB协议相关的内容，都在此章节内</para>
+                <para>所以，你会在其他地方看到有关此ch9的说法。比如Linux源码中关于USB协议实现的部分的代码，会看到有对应的头文件是</para>
+                <filename>include\linux\usb\ch9.h</filename>
+                <para>此文件，就是指的是USB规范中的chapter 9，第九章。</para>
+                <para>这也意味着，以后其他人如果谈及USB的话，说到第九章，指的就是此USB规范中的chapter 9，因为其包含了USB协议的软件实现所有关的多数的内容。</para>
+            </listitem>
+        </orderedlist>
+    </tip>
+    <para>所以，由上述总结，我们可以看出：</para>
+    <para>对于只是为USB外设开发驱动的开发者的话，那么有关的章节只有：</para>
+    <itemizedlist>
+        <listitem>4  系统架构综述</listitem>
+        <listitem>5  USB数据流模型</listitem>
+        <listitem>9  USB设备框架工作</listitem>
+        <listitem>10 USB主机的硬件和软件</listitem>
+    </itemizedlist>
+    <para>如果是对于USB外设的电子设计研发人员，有关系的章节有：</para>
+    <itemizedlist>
+        <listitem>4 系统架构综述</listitem>
+        <listitem>5 USB数据流模型</listitem>
+        <listitem>6 机械的</listitem>
+        <listitem>7 电子的</listitem>
+    </itemizedlist>
+    <para>这么一来，如果是打算做USB设备驱动开发的话，其实我们要看的，只是USB 2.0规范中的一部分，大概有10+60+36+23=129页，所以，相对来说，还算能够接受，至少比要看那600页，要少了很多。</para>
+    <para>当然，这其中的内容，也还是不少。</para>
+    <para>而下面这些内容，就是将其中最基本的内容，精简出来，以方便想要快速了解USB基础知识的人，尽快地，更加清晰地，了解到USB的基础知识。</para>
+</sect1>
+
+<sect1 xml:id="usb_version_speed"><title>USB协议的版本和支持的速度</title>
+    <para>USB协议，也像其他协议一样，经历过很多个版本，但是正式发布出来的，主要有4个。</para>
+    <para>其中，从开始的USB 1.1，发展到后来的USB 2.0，以及最新的协议版本是USB 3.0.</para>
+    <para>不过这三个版本都是针对的是有线的（corded）设备来说的，在USB 2.0和USB 3.0之间，发布过一个是针对无线设备的USB协议，叫做USB Wireless，也被称为USB 2.5。</para>
+    <para>其中，USB 1.1中所支持的速度是低速（Low Speed）的1.5Mbits/s，全速（Full Speed）的12Mbits/s，而USB 2.0提高了速度至高速（High Speed）的480Mbits/s，而最新的USB 3.0，支持超高速（Super Speed）的5Gbits/s。</para>
+    <para>下面简要总结一下，各个USB协议版本的演化历史：</para>
+    <table id="tbl.usb_protocol_history" align="center" ><title>USB协议的版本的演化</title>
+        <tgroup cols="6">
+            <colspec colnum="1" colname="col1" colwidth="1*" />
+            <colspec colnum="2" colname="col2" colwidth="1.5*" />
+            <colspec colnum="3" colname="col3" colwidth="1*" />
+            <colspec colnum="4" colname="col4" colwidth="1*" />
+            <colspec colnum="5" colname="col5" colwidth="2*" />
+            <colspec colnum="6" colname="col6" colwidth="1*" />
+            
+            <thead>
+                <row><entry namest="col1" nameend="col2" >USB协议</entry><entry>针对的设备</entry><entry namest="col4" nameend="col5" >对应的速度</entry><entry>备注</entry></row>
+                <row><entry>版本号</entry><entry>发布日期</entry><entry></entry><entry>名称</entry><entry>速率</entry><entry></entry></row>
+            </thead>
+            
+            <tbody>
+                <row><entry>1.1</entry><entry>1998年8月</entry><entry>有线的</entry><entry><literallayout>Low Speed
+Full Speed</literallayout></entry><entry><literallayout>1.5Mbits/s=192KB/s
+12Mbits/s=1.5MB/s</literallayout></entry><entry></entry></row>
+                <row><entry>2.0</entry><entry>2000年4月</entry><entry>有线的</entry><entry>High Speed</entry><entry>480Mbits/s=60MB/s</entry><entry></entry></row>
+                <row><entry>2.5</entry><entry>2010年9月</entry><entry>无线的</entry><entry></entry><entry></entry><entry>Wireless USB 1.1</entry></row>
+                <row><entry>3.0</entry><entry>2008年11月</entry><entry>有线的</entry><entry>Super Speed</entry><entry>5.0Gbits/s=640MB/s</entry><entry></entry></row>
+            </tbody>
+        </tgroup>
+    </table>
+    
+    <sect2 xml:id="why_not_faster"><title>为何USB的速度，最开始没有设计的更快些？</title>
+        <para>有人会问，既然USB技术本身可以设计成速度更快的，为何最开始不把USB的设计成速度更快的呢？比如，最开始为啥没有把USB设计成2.0的那样的速度呢？</para>
+        <para>那是因为，任何规范和协议，都离不开当时的背景。关于USB的速度发展，其有其自身的考虑。</para>
+        <para>比如最开始的USB 1.1，对于低速的1.5Mbits/s的速度，虽然速度很低，但是由于此速度，主要用于USB鼠标，键盘等低速设备，所以本身就够用了，而且速度低还有个好处，那就是对于电磁辐射EMI的抗干扰能力较强些，而使得设计和制造对应的硬件设备的成本要降低些，比如可以使用相对便宜的陶瓷振荡器（resonator）做晶振（crystal）。</para>
+        <para>而后来的USB 2.0,的出现，则是为了满足人民群众日益增长的对于高速速度传输方面的需求，比如你从MP3里面拷贝歌曲出来，如果是USB 1.1，那么实际效果最快也就1MB左右，而如果是USB 2.0，平均效果大概有3MB/s,5MB/s，性能好的可达10MB/s，20MB/s，所以，如果拷贝个1G的东西，相当于USB 1.1要1小时左右，而USB 2.0只要1分钟左右。因为如果没有USB 2.0的出现的话，那么现在的人们，早就放弃了USB了，因为谁也忍受不了这个太慢的速度。所以为了满足大家的需求，才有了USB 2.0的出现。</para>
+        <para>而对于最新的USB 3.0，同理，也是为了满足现在的一些及以后的可能的需求，即希望拷贝蓝光光碟的内容到硬盘上，动辄都是几个G的内容，以USB 2.0的速度，那怎么说也得个几分钟，而有了USB 3.0后，就有望实现，几秒或者几十秒，哗的一下，就把多少个G的东西，拷贝传输到别的介质上了。当然，这只是理论上的，实际的USB 3.0的速度，受到USB设备的硬件本身能力，和对应的软件驱动，以及所设计的介质不同，而会有不同的速度。</para>
+    </sect2>
+</sect1>
+
+<sect1 xml:id="core_is_host"><title>USB系统的核心是Host</title>
+    <para>USB是Host端控制整个的总线数据传输的。单个USB总线上，只能有一个Host。USB协议本身，是不支持多个Host端的。</para>
+    <para>不过，相对有点特殊的是，USB为了支持多个设备互相，而不需要另外接Host，比如一个数码相机和一个打印机，希望把打印机和数码相机直接相连接，然后就可以实现通过USB，把数据从数码相机传送到打印机中，打印机就可以打印了。</para>
+    <para>此处，OTG引入了一个新的概念，HNP（Host Negotiation Protocol），主机协商协议，允许两个设备之间互相协商谁去当Host。不过，即使在OTG中，也只是同一时刻，只存在单个的Host，而不允许存在多个Host的。</para>
+    <para>USB中的Host端，负责所有底层的数据传输的控制以及数据带宽的安排调度。</para>
+    <para>底层数据的发送，是使用一种基于令牌环的协议，通过不同类型的传输方法而实现的。</para>
+    <para>USB的设备连接方式，即拓扑方式，是星形的，所以，在需要连接多个设备的时候，常需要用到对应的Hub。这种星形拓扑的好处是，对于每一个设备的供电情况，都可以控制，也可以同时支持多个不同类型的设备。而万一某设备电流过高了，也不会影响到其他设备。</para>
+    <para>同一USB总线中，最多可连接127个设备。当然，实际中你所看到的，往往都比较少，至少普通用户用到的，也就是几个的数量级。常见的是一个USB Host，提供，2,3个或者4,5个接口。而USB Host的内部实现，也有最开始的只有1个USB主控Host Controller，变得有些内部包含2个甚至更多个USB主控，以提高所接的USB设备的带宽，即速率，因为单个USB主控所接多个USB设备的话，那么多个设备是共享此USB主控的带宽的。</para>
+</sect1>
+
+<sect1 xml:id="nrzi_encoding"><title>USB中用NRZI来编码数据</title>
+    <para>之前已经介绍过了USB的引脚定义了，但是对于其中的USB 2.0的两根数据线D+和D-所对应的数据传输，却没有详细介绍。此处就是介绍，在此串行数据线中，数据是如何被编码和传送的。</para>
+    <para>USB所传输的数据，用的数据编码方式是NRZI（Non-Return-to-Zero Inverted），其具体的含义解释，个人觉得某人解释的很清楚，所以在此转载其对应的这篇文章：</para>
+    <para><ulink url="http://galeki.is-programmer.com/posts/10054.html">USB 的 NRZI 编码</ulink></para>
+    <para>这两天继续看 USB 相关的内容，准备用纯软件实现一下 USB 设备传输，为将来的项目打好基础。</para>
+    <para>首先碰到的就是这个 NRZI 编码的问题了，基础太薄弱，看了一上午总算明白了大概。</para>
+    <para>首先，USB 的数据是串行发送的，就像 UART、I2C、SPI 等等，连续的01 信号只通过一根数据线发送给接受者。</para>
+    <para>但是因为发送者和接收者运行的频率不一样，信号的同步就是个问题，比如，接受者接收到了一个持续一段时间的低电平，无法得知这究竟是代表了5个0 还是1000个0。</para>
+    <para>一个解决办法，就是在传输数据信号的同时，附加一个时钟信号，用来同步两端的传输，接受者在时钟信号的辅助下对数据信号采样，就可以正确解析出发送的数据了，比如 I2C 就是这样做的，SDA 来传输数据，SCL 来传输同步时钟：</para>
+    <figure id="fg.i2c_data_enc_format"><title>I2C数据编码格式</title>
+        <mediaobject>
+            <imageobject role="html">
+                <imagedata fileref="images/i2c_data_enc_format.jpg" align="left" scalefit="0" width="100%" />
+            </imageobject>
+            <imageobject role="fo">
+                <imagedata fileref="images/i2c_data_enc_format.jpg" align="center" scalefit="1" width="100%"/>
+            </imageobject>
+        </mediaobject>
+    </figure>
+    <para>虽然这样解决了问题，但是却需要附加一根时钟信号线来传输时钟。有没有不需要附加的时钟信号，也能保持两端的同步呢？</para>
+    <para>有的，这就是 RZ 编码（Return-to-zero Code），也叫做归零编码。</para>
+    <para>在 RZ 编码中，正电平代表逻辑 1，负电平代表逻辑 0，并且，每传输完一位数据，信号返回到零电平，也就是说，信号线上会出现 3 种电平：正电平、负电平、零电平：</para>
+    <figure id="fg.retrun_to_zero_enc"><title>归零编码</title>
+        <mediaobject>
+            <imageobject role="html">
+                <imagedata fileref="images/retrun_to_zero_enc.jpg" align="left" scalefit="0" width="100%" />
+            </imageobject>
+            <imageobject role="fo">
+                <imagedata fileref="images/retrun_to_zero_enc.jpg" align="center" scalefit="1" width="60%"/>
+            </imageobject>
+        </mediaobject>
+    </figure>
+    <para>从图上就可以看出来，因为每位传输之后都要归零，所以接收者只要在信号归零后采样即可，这样就不在需要单独的时钟信号。实际上， RZ 编码就是相当于把时钟信号用归零编码在了数据之内。这样的信号也叫做自同步（self-clocking）信号。</para>
+    <para>这样虽然省了时钟数据线，但是还是有缺点的，因为在 RZ 编码中，大部分的数据带宽，都用来传输“归零”而浪费掉了。</para>
+    <para>那么，我们去掉这个归零步骤，NRZ 编码（Non-return-to-zero Code）就出现了，和 RZ 的区别就是 NRZ 是不需要归零的：</para>
+    <figure id="fg.none_retrun_to_zero_enc"><title>非归零编码</title>
+        <mediaobject>
+            <imageobject role="html">
+                <imagedata fileref="images/none_retrun_to_zero_enc.jpg" align="left" scalefit="0" width="100%" />
+            </imageobject>
+            <imageobject role="fo">
+                <imagedata fileref="images/none_retrun_to_zero_enc.jpg" align="center" scalefit="1" width="60%"/>
+            </imageobject>
+        </mediaobject>
+    </figure>
+    <para>这样，浪费的带宽又回来了，不过又丧失宝贵的自同步特性了，貌似我们又回到了原点，其实这个问题也是可以解决的，不过待会儿再讲，先看看什么是 NRZI：</para>
+    <para>NRZI 编码（Non-Return-to-Zero Inverted Code）和 NRZ 的区别就是 NRZI 用信号的翻转代表一个逻辑，信号保持不变代表另外一个逻辑。</para>
+    <para>USB 传输的编码就是 NRZI 格式，在 USB 中，电平翻转代表逻辑 0，电平不变代表逻辑1：</para>
+    <figure id="fg.nrz_nrzi"><title>NRZ和NRZI</title>
+        <mediaobject>
+            <imageobject role="html"> <imagedata fileref="images/nrz_nrzi.jpg" align="left" scalefit="0" width="100%" /> </imageobject>
+            <imageobject role="fo"  > <imagedata fileref="images/nrz_nrzi.jpg" align="center" scalefit="1" width="60%"/> </imageobject>
+        </mediaobject>
+    </figure>
+    <para>翻转的信号本身可以作为一种通知机制，而且可以看到，即使把 NRZI 的波形完全翻转，所代表的数据序列还是一样的，对于像 USB 这种通过差分线来传输的信号尤其方便~</para>
+    <para>现在再回到那个同步问题：</para>
+    <para>的确，NRZ 和 NRZI 都没有自同步特性，但是可以用一些特殊的技巧解决。</para>
+    <para>比如，先发送一个同步头，内容是 0101010 的方波，让接受者通过这个同步头计算出发送者的频率，然后再用这个频率来采样之后的数据信号，就可以了。</para>
+    <para>在 USB 中，每个 USB 数据包，最开始都有个同步域（SYNC），这个域固定为 0000 0001，这个域通过 NRZI 编码之后，就是一串方波（复习下前面：NRZI 遇 0 翻转遇 1 </para>
+    <para>此外，因为在 USB 的 NRZI 编码下，逻辑 0 会造成电平翻转，所以接收者在接收数据的同时，根据接收到的翻转信号不断调整同步频率，保证数据传输正确。</para>
+    <para>但是，这样还是会有一个问题，就是虽然接收者可以主动和发送者的频率匹配，但是两者之间总会有误差。</para>
+    <para>假如数据信号是 1000个逻辑1，经过 USB 的 NRZI 编码之后，就是很长一段没有变化的电平，在这种情况下，即使接受者的频率和发送者相差千分之一，就会造成把数据采样成 1001个或者 999个了。</para>
+    
+    <sect2 xml:id="bit_stuffing"><title>USB中用Bit-Stuffing来同步时钟信号</title>
+        <para>USB对这个问题的解决办法，就是强制插0，也就是传说中的bit-stuffing，如果要传输的数据中有7个连续的1，发送前就会在第6个1后面强制插入一个0，让发送的信号强制出现翻转，从而强制接受者进行频率调整。接受者只要删除6个连续 1 之后的0，就可以恢复原始的数据了。</para>
+        <para></para>
+    </sect2>
+</sect1>
+
+</chapter>

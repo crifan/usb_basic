@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE preface>
+<preface
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:ns="http://docbook.org/ns/docbook"
+
+	xml:id="preface">
+    
+<title>正文之前</title>
+
+<sect1 xml:id="purpose"><title>此文目的</title>
+    <para>由于USB所涉及的知识太多，如果想要在一篇文章里，把USB的方方面面的内容，都解释的很清楚，那几乎是不可能的。</para>
+    <para>因此，此文目的，不是为了把USB的所有的事情都写出来，而是让对USB不懂的人，通过此文档，能对USB有个基本的认识，并且搞懂USB世界中的基本的术语的含义。</para>
+    <para>即，此文目的，是为了给不熟悉USB的人，一个总体的概述，以及解释一些必要的USB方面的基本知识。</para>
+    <para>这样，如果想要更细节的去了解USB的知识，也知道从哪里入手，以及如何去找相关资料区学习了。</para>
+</sect1>
+
+<sect1 xml:id="use_materials"><title>关于一些USB方面的文档</title>
+    <para>USB很复杂，所以，如果能把复杂的东西解释的清楚的，不是很容易。</para>
+    <para>而且由于USB涉及知识面也很广，所以也很难简短地描述清楚。</para>
+    
+    <sect2 xml:id="material_en_whole"><title>大而全的USB英文资料</title>
+        <para>对于众多的现存的USB的文章或书籍，我所见过的，能把USB讲的透彻的，算是</para>
+        <para>英文资料：《USB Complete》，中文翻译为《USB大全》，目前最新版本是第四版。</para>
+        <para>其主页是：</para>
+        <para><ulink url="http://www.lvr.com/usbc.htm" /></para>
+        <para>网上也可以找到盗版的电子版的，第三版的有中文翻译，第四版的只有英文原版。</para>
+    </sect2>
+    
+    <sect2 xml:id="material_en_consise"><title>简明扼要的USB英文资料</title>
+        <para>另外，简明扼要地，把USB讲解的很清楚的，我觉得算是《USB in a Nutshell》了，网上随便都可以搜到此文的pdf版本，比如：</para>
+        <para><ulink url="http://www.beyondlogic.org/usbnutshell/usb-in-a-nutshell.pdf">USB in a Nutshell - Making sense of the USB standard</ulink></para>
+        <para>而此文，也是主要根据此贴而来，基本可以算是《USB in a Nutshell》的中文版吧，然后另外又添加了一些必要的知识，以求把USB讲解的更加清楚。</para>
+    </sect2>
+    
+    <sect2 xml:id="material_zh_serial"><title>全系列的介绍Linux下的USB中文资料</title>
+        <para>另外，关于中文方面的资料，觉得写的比较全，解释的比较清楚的，算是fudan_abc写的《Linux那些事儿系列》，是一个系列的，好多个文档的。详细资料，已整理放到这里了：</para>
+        <para><ulink url="http://bbs.chinaunix.net/thread-1977195-1-1.html">【很好的学习Linux驱动的教材】Linux那些事儿系列[全][pdf]</ulink></para>
+    </sect2>
+</sect1>
+
+<sect1 xml:id="declaration"><title>声明</title>
+    <para>由于本人知识水平有限，错误在所难免，欢迎指正。</para>
+    <para>此文欢迎拷贝传播，但是所有权本人独有，未经许可，严谨用于其他商业等用途。</para>
+    <para>更多建议，意见，吐槽，都可以联系偶：admin (at) crifan.com </para>
+</sect1>
+
+</preface>
